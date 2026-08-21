@@ -379,12 +379,24 @@
       color: var(--green);
     }
 
-    .countdown.warning {
-      color: var(--orange);
+    .countdown.warning,
+    .countdown.urgent {
+      color: var(--exam-color, var(--blue));
     }
 
-    .countdown.urgent {
-      color: var(--red);
+    .countdown.alert-15 {
+      color: #ff9800 !important;
+      text-shadow: 0 0 10px rgba(255, 152, 0, 0.42);
+    }
+
+    .countdown.alert-10 {
+      color: #f4511e !important;
+      text-shadow: 0 0 16px rgba(244, 81, 30, 0.5);
+    }
+
+    .countdown.alert-5 {
+      color: #e53935 !important;
+      text-shadow: 0 0 24px rgba(229, 57, 53, 0.6);
     }
 
     .hero .hero-title,
@@ -909,12 +921,24 @@
       color: #61e5ad;
     }
 
-    .projection-count.warning {
-      color: #ffc56e;
+    .projection-count.warning,
+    .projection-count.urgent {
+      color: var(--exam-color, #8db1ff);
     }
 
-    .projection-count.urgent {
-      color: #ff8585;
+    .projection-count.alert-15 {
+      color: #ff9800 !important;
+      text-shadow: 0 0 14px rgba(255, 152, 0, 0.48);
+    }
+
+    .projection-count.alert-10 {
+      color: #f4511e !important;
+      text-shadow: 0 0 22px rgba(244, 81, 30, 0.56);
+    }
+
+    .projection-count.alert-5 {
+      color: #e53935 !important;
+      text-shadow: 0 0 32px rgba(229, 57, 53, 0.66);
     }
 
     .projection-note {
@@ -1791,6 +1815,25 @@
       return `${pad(hours)}:${pad(minutes)}:${pad(rest)}`;
     }
 
+    function getCountdownLevel(remaining, status) {
+      if (status === "done") return "";
+      if (remaining <= 300) return "alert-5";
+      if (remaining <= 600) return "alert-10";
+      if (remaining <= 900) return "alert-15";
+      return status === "running" ? "running" : "";
+    }
+
+    function applyExamCountdownColor(element, exam, remaining) {
+      if (!element || !exam) return;
+      const color = exam.color || "#356ae6";
+      const level = getCountdownLevel(remaining, getExamStatus(exam));
+      const warningColor = level === "alert-15" ? "#ff9800" : level === "alert-10" ? "#f4511e" : level === "alert-5" ? "#e53935" : color;
+      element.style.setProperty("--exam-color", color);
+      element.style.setProperty("color", warningColor, "important");
+      element.dataset.alertColor = warningColor;
+      element.dataset.alertLevel = level;
+    }
+
     function getExamStatus(exam, now = nowDate()) {
       const start = dateTime(exam, exam.start);
       const end = dateTime(exam, exam.end);
@@ -2065,7 +2108,7 @@
       const end = dateTime(exam, exam.end);
       const remaining = status === "upcoming" ? (start - now) / 1000 : status === "running" ? (end - now) / 1000 : 0;
       const label = status === "upcoming" ? `距離「${escapeHtml(exam.name)}」開始還有` : status === "running" ? "考試進行中，剩餘時間" : "這場考試已經結束";
-      const tone = status === "running" ? "running" : status === "done" ? "" : remaining < 300 ? "urgent" : remaining < 1800 ? "warning" : "";
+      const tone = getCountdownLevel(remaining, status);
       const statusText = status === "running" ? "● 正在考試" : status === "done" ? "✓ 已完成" : "○ 尚未開始";
 
       $("hero").style.setProperty("--exam-color", exam.color || "#356ae6");
@@ -2112,6 +2155,8 @@
         const endPoint = status === "running" ? dateTime(exam, exam.end) : dateTime(exam, exam.start);
         const remaining = (endPoint - now) / 1000;
         countdown.textContent = secondsToClock(remaining);
+        countdown.className = `countdown ${getCountdownLevel(remaining, status)}`;
+        applyExamCountdownColor(countdown, exam, remaining);
 
         if (soundSettings.enabled) {
           const currentSecond = Math.ceil(Math.max(0, remaining));
@@ -2139,12 +2184,12 @@
         return;
       }
 
-      const now = new Date();
+      const now = nowDate();
       const status = getExamStatus(exam, now);
       const start = dateTime(exam, exam.start);
       const end = dateTime(exam, exam.end);
       const remaining = status === "upcoming" ? (start - now) / 1000 : status === "running" ? (end - now) / 1000 : 0;
-      const tone = status === "running" ? "running" : status === "done" ? "" : remaining < 300 ? "urgent" : remaining < 1800 ? "warning" : "";
+      const tone = getCountdownLevel(remaining, status);
       const statusText = status === "running" ? "● 考試進行中" : status === "done" ? "✓ 本場已結束" : "○ 尚未開始";
       const label = status === "upcoming" ? "距離開始還有" : status === "running" ? "剩餘時間" : "考試已結束";
       const schedule = clockSettings.showSchedule ? `<div class="projection-date">${formatDate(exam.date)} · ${formatTime(exam.start)} – ${formatTime(exam.end)}</div>` : "";
@@ -2160,6 +2205,8 @@
         ${note}
         <div class="projection-clock">${today}目前時間 ${formatClock(now)}</div>
       `;
+
+      applyExamCountdownColor($("projectionView").querySelector(".projection-count"), exam, remaining);
     }
 
     function renderAll() {
