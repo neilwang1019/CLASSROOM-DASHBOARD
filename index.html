@@ -1446,6 +1446,7 @@
           <div class="clock-card" id="clockCard">
             <small id="clockDate">正在讀取日期</small>
             <strong id="clockTime">--:--:--</strong>
+            <small id="clockSource">裝置時間</small>
           </div>
         </div>
       </header>
@@ -1692,6 +1693,9 @@
     let toastTimer = null;
     let soundContext = null;
     let previousExamState = { id: null, status: null, second: null };
+    let timeOffset = 0;
+    let timeSource = "device";
+    const STANDARD_TIME_URL = "https://www.stdtime.gov.tw/Home/GetServerTime";
 
     let clockSettings = {
       format: "24",
@@ -1711,7 +1715,41 @@
 
     let uiTheme = "light";
 
-    function localDate(date = new Date()) {
+    function nowDate() {
+      return new Date(Date.now() + timeOffset);
+    }
+
+    function updateTimeSource() {
+      const source = $("clockSource");
+      if (!source) return;
+      source.textContent = timeSource === "standard" ? "國家標準時間" : "裝置時間（離線備援）";
+      source.title = timeSource === "standard"
+        ? "已與臺灣國家標準時間同步"
+        : "目前無法連線，使用本機裝置時間";
+    }
+
+    async function syncStandardTime(showMessage = false) {
+      const requestStart = Date.now();
+      try {
+        const response = await fetch(STANDARD_TIME_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("標準時間服務無法連線");
+        const value = await response.json();
+        const serverMs = Date.parse(value);
+        if (!Number.isFinite(serverMs)) throw new Error("標準時間格式無效");
+        const requestEnd = Date.now();
+        timeOffset = serverMs - Math.round((requestStart + requestEnd) / 2);
+        timeSource = "standard";
+        updateTimeSource();
+        renderAll();
+        if (showMessage) showToast("已與國家標準時間同步");
+      } catch {
+        timeSource = "device";
+        updateTimeSource();
+        if (showMessage) showToast("標準時間暫時無法連線，使用裝置時間");
+      }
+    }
+
+    function localDate(date = nowDate()) {
       return [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join("-");
     }
 
@@ -1753,7 +1791,7 @@
       return `${pad(hours)}:${pad(minutes)}:${pad(rest)}`;
     }
 
-    function getExamStatus(exam, now = new Date()) {
+    function getExamStatus(exam, now = nowDate()) {
       const start = dateTime(exam, exam.start);
       const end = dateTime(exam, exam.end);
       if (now < start) return "upcoming";
@@ -2022,7 +2060,7 @@
       }
 
       const status = getExamStatus(exam);
-      const now = new Date();
+      const now = nowDate();
       const start = dateTime(exam, exam.start);
       const end = dateTime(exam, exam.end);
       const remaining = status === "upcoming" ? (start - now) / 1000 : status === "running" ? (end - now) / 1000 : 0;
@@ -2062,7 +2100,7 @@
     }
 
     function renderCurrentClock() {
-      const now = new Date();
+      const now = nowDate();
       $("clockDate").textContent = clockSettings.showDate ? formatDate(localDate(now)) : "";
       $("clockDate").style.display = clockSettings.showDate ? "block" : "none";
       $("clockTime").textContent = formatClock(now);
@@ -2143,8 +2181,8 @@
     function openExamModal(id = null) {
       editingExamId = id;
       const exam = id ? exams.find((item) => item.id === id) : null;
-      const now = new Date();
-      const defaultEnd = new Date(now.getTime() + 40 * 60 * 1000);
+        const now = nowDate();
+        const defaultEnd = new Date(now.getTime() + 40 * 60 * 1000);
 
       $("modalTitle").textContent = exam ? "編輯考試" : "新增考試";
       $("examName").value = exam?.name || "";
@@ -2363,8 +2401,11 @@
     loadClockSettings();
     loadSoundSettings();
     loadUITheme();
+    updateTimeSource();
     renderAll();
+    syncStandardTime();
     setInterval(renderCurrentClock, 1000);
+    setInterval(() => syncStandardTime(false), 5 * 60 * 1000);
   </script>
 </body>
 </html>
