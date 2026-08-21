@@ -2206,7 +2206,7 @@
         <div class="projection-clock">${today}目前時間 ${formatClock(now)}</div>
       `;
 
-      applyExamCountdownColor($("projectionView").querySelector(".projection-count"), exam, remaining);
+      applyExamCountdownColor($("projectionBody").querySelector(".projection-count"), exam, remaining);
     }
 
     function renderAll() {
@@ -2351,32 +2351,57 @@
     }
 
     function importSettings(event) {
-      const file = event.target.files?.[0];
+      const input = event?.target;
+      const file = input?.files?.[0];
       if (!file) return;
 
       const reader = new FileReader();
       reader.onload = () => {
         try {
-          const data = JSON.parse(reader.result);
-          if (!data || data.format !== "teacher-exam-board" || !Array.isArray(data.exams)) {
+          const data = JSON.parse(String(reader.result || ""));
+          const importedExams = Array.isArray(data) ? data : data?.exams;
+          const isSupportedFormat = Array.isArray(data) || data?.format === "teacher-exam-board" || data?.version;
+
+          if (!isSupportedFormat || !Array.isArray(importedExams)) {
             throw new Error("格式不正確");
           }
 
-          exams = data.exams.filter((exam) => exam.name && exam.date && exam.start && exam.end);
-          if (!exams.length) throw new Error("沒有可用的考試資料");
+          const nowId = Date.now();
+          const normalizedExams = importedExams.map((exam, index) => {
+            if (!exam || typeof exam !== "object") return null;
+            const name = String(exam.name || exam.subject || "").trim();
+            const date = String(exam.date || "").trim();
+            const start = String(exam.start || "").trim();
+            const end = String(exam.end || "").trim();
+            if (!name || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(start) || !/^\d{2}:\d{2}$/.test(end)) return null;
+            return {
+              ...exam,
+              id: Number.isFinite(Number(exam.id)) ? Number(exam.id) : nowId + index,
+              name,
+              date,
+              start,
+              end,
+              color: typeof exam.color === "string" && exam.color.trim() ? exam.color : "#356ae6",
+              note: typeof exam.note === "string" ? exam.note : "",
+            };
+          }).filter(Boolean);
 
+          if (!normalizedExams.length) throw new Error("沒有可用的考試資料");
+
+          exams = normalizedExams;
           selectedExamId = exams[0].id;
-          if (data.classSettings) {
+
+          if (data.classSettings && typeof data.classSettings === "object") {
             $("totalStudents").value = data.classSettings.total ?? 30;
             $("presentStudents").value = data.classSettings.present ?? 30;
             saveClassSettings();
           }
-          if (data.clockSettings) {
+          if (data.clockSettings && typeof data.clockSettings === "object") {
             clockSettings = { ...clockSettings, ...data.clockSettings };
             localStorage.setItem(CLOCK_STORAGE_KEY, JSON.stringify(clockSettings));
             loadClockSettings();
           }
-          if (data.soundSettings) {
+          if (data.soundSettings && typeof data.soundSettings === "object") {
             soundSettings = { ...soundSettings, ...data.soundSettings };
             localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
             loadSoundSettings();
@@ -2390,13 +2415,18 @@
           saveExams();
           renderAll();
           showToast(`已匯入 ${exams.length} 場考試設定`);
-        } catch {
-          showToast("匯入失敗：請選擇正確的設定檔");
+        } catch (error) {
+          console.error("匯入設定失敗", error);
+          showToast("匯入失敗：檔案格式或考試日期時間不正確");
         } finally {
-          event.target.value = "";
+          if (input) input.value = "";
         }
       };
-      reader.readAsText(file);
+      reader.onerror = () => {
+        if (input) input.value = "";
+        showToast("匯入失敗：無法讀取檔案");
+      };
+      reader.readAsText(file, "utf-8");
     }
 
     function saveExamNote() {
