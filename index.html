@@ -2055,9 +2055,9 @@
       $("currentReminder").textContent = exam?.note || "尚未選擇提醒";
       $("customReminder").value = exam?.note || "";
 
-      const next = sortedExams().find((item) => getExamStatus(item) !== "done");
+      const next = sortedExams().find((item) => getExamStatus(item) === "upcoming");
       $("examCount").textContent = `${exams.length} 場`;
-      $("nextExam").textContent = next ? `${subjectIcon(next.name)} ${next.name}` : "今天沒有待考試";
+      $("nextExam").textContent = next ? `${subjectIcon(next.name)} ${next.name}` : "沒有尚未開始的考試";
       $("nextTime").textContent = next ? `${formatDate(next.date)} · ${formatTime(next.start)}` : "可按「新增考試」安排下一場";
     }
 
