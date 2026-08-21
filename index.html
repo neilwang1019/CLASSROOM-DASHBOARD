@@ -22,6 +22,18 @@
       --radius: 18px;
     }
 
+    body[data-ui-theme="dark"] {
+      --ink: #edf4ff;
+      --muted: #aab8cc;
+      --line: #33435b;
+      --paper: #172235;
+      --bg: #0c1422;
+      --blue-soft: #1b3157;
+      --green-soft: #14392f;
+      --orange-soft: #493416;
+      --shadow: 0 14px 38px #00000044;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -916,9 +928,8 @@
       line-height: 1.45;
     }
 
-    .projection .projection-title,
-    .projection .projection-count {
-      color: var(--exam-color, #8db1ff) !important;
+    .projection .projection-title {
+      color: var(--exam-color, #8db1ff);
     }
 
     .projection-clock {
@@ -951,6 +962,97 @@
       border-color: #aeb9c8;
       background: white;
       color: var(--ink);
+    }
+
+    .projection.theme-classic {
+      background: #f7faff;
+      color: #172033;
+    }
+
+    .projection.theme-classic .projection-top,
+    .projection.theme-classic .projection-date,
+    .projection.theme-classic .projection-label,
+    .projection.theme-classic .projection-clock {
+      color: #61708a;
+    }
+
+    .projection.theme-classic .projection-status,
+    .projection.theme-classic .projection-note {
+      background: #ffffff;
+      color: #172033;
+      box-shadow: 0 8px 26px #356ae61a;
+    }
+
+    .projection.theme-digital {
+      background: #0b1220;
+      color: #dbeafe;
+    }
+
+    .projection.theme-digital .projection-count {
+      color: #54d6ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      text-shadow: 0 0 24px #54d6ff88;
+    }
+
+    .projection.theme-digital .projection-status,
+    .projection.theme-digital .projection-note {
+      border: 1px solid #54d6ff33;
+      background: #16243a;
+    }
+
+    .projection.theme-flip {
+      background: #e9e4d8;
+      color: #27231e;
+    }
+
+    .projection.theme-flip .projection-top,
+    .projection.theme-flip .projection-date,
+    .projection.theme-flip .projection-label,
+    .projection.theme-flip .projection-clock {
+      color: #746b5e;
+    }
+
+    .projection.theme-flip .projection-count {
+      padding: 18px 28px;
+      border-radius: 12px;
+      background: #27231e;
+      color: #fff8e9;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      box-shadow: 0 12px 0 #b9ae9d;
+    }
+
+    .projection.theme-flip .projection-status,
+    .projection.theme-flip .projection-note {
+      background: #fffaf0;
+      color: #27231e;
+      box-shadow: 0 8px 24px #50483c1c;
+    }
+
+    .projection.theme-contrast {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .projection.theme-contrast .projection-top,
+    .projection.theme-contrast .projection-date,
+    .projection.theme-contrast .projection-label,
+    .projection.theme-contrast .projection-clock {
+      color: #ffffff;
+    }
+
+    .projection.theme-contrast .projection-title,
+    .projection.theme-contrast .projection-count {
+      color: #ffe600;
+      text-shadow: none;
+    }
+
+    .projection.theme-contrast .projection-status,
+    .projection.theme-contrast .projection-note,
+    .projection.theme-contrast .projection-exit {
+      border: 2px solid #ffe600;
+      background: #000000;
+      color: #ffffff;
+      box-shadow: none;
     }
 
     .projection.theme-led {
@@ -1017,6 +1119,200 @@
 
     .projection.size-extra .projection-count {
       font-size: clamp(100px, 19vw, 280px);
+    }
+
+    body[data-ui-theme="dark"] .exam-item,
+    body[data-ui-theme="dark"] .panel,
+    body[data-ui-theme="dark"] .hero,
+    body[data-ui-theme="dark"] .clock-card,
+    body[data-ui-theme="dark"] .next-panel {
+      background: var(--paper);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] .exam-item.active {
+      background: #1b3157;
+      border-color: #6d9cff;
+    }
+
+    body[data-ui-theme="dark"] .exam-item.running {
+      background: #14392f;
+      border-color: #49c998;
+    }
+
+    body[data-ui-theme="dark"] .secondary-button,
+    body[data-ui-theme="dark"] .icon-button,
+    body[data-ui-theme="dark"] .clear-reminder,
+    body[data-ui-theme="dark"] .reminder-button {
+      background: #202f46;
+      border-color: #425572;
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] .secondary-button:hover,
+    body[data-ui-theme="dark"] .icon-button:hover,
+    body[data-ui-theme="dark"] .reminder-button:hover {
+      background: #2b4261;
+      border-color: #78a4ed;
+    }
+
+    body[data-ui-theme="dark"] input,
+    body[data-ui-theme="dark"] select,
+    body[data-ui-theme="dark"] textarea {
+      background: #101b2c;
+      border-color: #3b4d68;
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] input::placeholder,
+    body[data-ui-theme="dark"] textarea::placeholder {
+      color: #8292a9;
+    }
+
+    body[data-ui-theme="dark"] .modal-backdrop {
+      background: #020611aa;
+    }
+
+    body[data-ui-theme="dark"] .modal {
+      background: #172235;
+      border-color: #344963;
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] .modal-header {
+      border-bottom-color: var(--line);
+    }
+
+    body[data-ui-theme="dark"] .close-button {
+      background: #243550;
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] .setting-panel summary,
+    body[data-ui-theme="dark"] .panel-heading h3,
+    body[data-ui-theme="dark"] .hero h2,
+    body[data-ui-theme="dark"] .next-name {
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] .status-badge {
+      background: #243b65;
+      color: #bcd3ff;
+    }
+
+    body[data-ui-theme="dark"] .current-reminder {
+      background: #1e3048;
+      border-color: #3b567b;
+      color: var(--ink);
+    }
+
+    body[data-ui-theme="dark"] .field-label,
+    body[data-ui-theme="dark"] .setting-row > span,
+    body[data-ui-theme="dark"] .check-row,
+    body[data-ui-theme="dark"] .form-hint {
+      color: var(--muted);
+    }
+
+    body[data-ui-theme="dark"] .toast {
+      background: #eef4ff;
+      color: #172033;
+    }
+
+    .range-input {
+      width: 100%;
+      height: 8px;
+      margin: 2px 0 12px;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+
+    .volume-row output {
+      color: var(--blue);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 暗色介面會同步影響投影的明暗基底；投影主題仍保留自己的風格。 */
+    body[data-ui-theme="dark"] .projection.theme-classic,
+    body[data-ui-theme="dark"] .projection.theme-soft {
+      background: #101b2c;
+      color: #edf4ff;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-top,
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-date,
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-label,
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-clock,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-top,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-date,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-label,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-clock {
+      color: #aab8cc;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-note,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-note {
+      background: #172235;
+      color: #edf4ff;
+      box-shadow: 0 8px 26px #00000044;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-exit,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-exit {
+      border-color: #52657f;
+      background: #172235;
+      color: #edf4ff;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-mint {
+      background: #102b27;
+      color: #e7fff8;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-top,
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-date,
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-label,
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-clock {
+      color: #a8d7ca;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-exit {
+      border-color: #4e8f7d;
+      background: #173b35;
+      color: #e7fff8;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-mono {
+      background: #0b0b0b;
+      color: #ffffff;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-top,
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-date,
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-label,
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-clock {
+      color: #d2d2d2;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-exit {
+      border-color: #ffffff;
+      background: #ffffff;
+      color: #111111;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-flip {
+      background: #2d2923;
+      color: #fff8e9;
+    }
+
+    body[data-ui-theme="dark"] .projection.theme-flip .projection-top,
+    body[data-ui-theme="dark"] .projection.theme-flip .projection-date,
+    body[data-ui-theme="dark"] .projection.theme-flip .projection-label,
+    body[data-ui-theme="dark"] .projection.theme-flip .projection-clock {
+      color: #c9bca9;
     }
 
     @media (max-width: 900px) {
@@ -1203,6 +1499,20 @@
           </details>
 
           <details class="panel setting-panel">
+            <summary>介面主題設定</summary>
+            <div class="setting-content">
+              <div class="setting-row">
+                <span>教師控制頁</span>
+                <select id="uiTheme" onchange="updateUITheme()">
+                  <option value="light">明亮介面</option>
+                  <option value="dark">暗色介面</option>
+                </select>
+              </div>
+              <div class="panel-hint">只會改變教師控制頁與編輯視窗，不會改變投影主題。</div>
+            </div>
+          </details>
+
+          <details class="panel setting-panel">
             <summary>聲音提示設定</summary>
             <div class="setting-content">
               <div class="check-row">
@@ -1219,6 +1529,11 @@
                   <option value="soft">柔和提示</option>
                 </select>
               </div>
+              <div class="setting-row volume-row">
+                <span>提示音音量</span>
+                <output id="soundVolumeValue">70%</output>
+              </div>
+              <input id="soundVolume" class="range-input" type="range" min="0.2" max="1" step="0.05" value="0.7" oninput="updateSoundVolume()" />
               <button class="secondary-button" type="button" onclick="testSound()">測試提示音</button>
               <div class="panel-hint">倒數結束、考試開始／結束與套用提醒時播放。</div>
             </div>
@@ -1366,6 +1681,7 @@
     const CLASS_STORAGE_KEY = "teacherExamBoard_class_v1";
     const CLOCK_STORAGE_KEY = "teacherExamBoard_clock_v2";
     const SOUND_STORAGE_KEY = "teacherExamBoard_sound_v1";
+    const UI_THEME_STORAGE_KEY = "teacherExamBoard_ui_theme_v1";
 
     const $ = (id) => document.getElementById(id);
     const pad = (value) => String(value).padStart(2, "0");
@@ -1390,7 +1706,10 @@
     let soundSettings = {
       enabled: false,
       type: "bell",
+      volume: 0.7,
     };
+
+    let uiTheme = "light";
 
     function localDate(date = new Date()) {
       return [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join("-");
@@ -1553,15 +1872,37 @@
 
       $("soundEnabled").checked = soundSettings.enabled;
       $("soundType").value = soundSettings.type;
+      $("soundVolume").value = soundSettings.volume;
+      $("soundVolumeValue").textContent = `${Math.round(soundSettings.volume * 100)}%`;
     }
 
     function updateSoundSettings() {
       soundSettings = {
         enabled: $("soundEnabled").checked,
         type: $("soundType").value,
+        volume: Number($("soundVolume").value),
       };
       localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
       showToast(soundSettings.enabled ? "聲音提示已開啟" : "聲音提示已關閉");
+    }
+
+    function updateSoundVolume() {
+      soundSettings.volume = Number($("soundVolume").value);
+      $("soundVolumeValue").textContent = `${Math.round(soundSettings.volume * 100)}%`;
+      localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
+    }
+
+    function loadUITheme() {
+      uiTheme = localStorage.getItem(UI_THEME_STORAGE_KEY) === "dark" ? "dark" : "light";
+      document.body.dataset.uiTheme = uiTheme;
+      $("uiTheme").value = uiTheme;
+    }
+
+    function updateUITheme() {
+      uiTheme = $("uiTheme").value === "dark" ? "dark" : "light";
+      document.body.dataset.uiTheme = uiTheme;
+      localStorage.setItem(UI_THEME_STORAGE_KEY, uiTheme);
+      showToast(uiTheme === "dark" ? "已切換為暗色介面" : "已切換為明亮介面");
     }
 
     function getAudioContext() {
@@ -1592,12 +1933,13 @@
           oscillator.type = soundSettings.type === "soft" ? "sine" : "triangle";
           oscillator.frequency.value = frequency;
           gain.gain.setValueAtTime(0.0001, start);
-          gain.gain.exponentialRampToValueAtTime(0.16, start + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
+          const peak = Math.min(0.42, Math.max(0.08, soundSettings.volume * 0.42));
+          gain.gain.exponentialRampToValueAtTime(peak, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.34);
           oscillator.connect(gain);
           gain.connect(context.destination);
           oscillator.start(start);
-          oscillator.stop(start + 0.24);
+          oscillator.stop(start + 0.36);
         });
       }
     }
@@ -1776,7 +2118,7 @@
         <h2 class="projection-title">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
         ${schedule}
         <div class="projection-label">${label}</div>
-        <div class="projection-count ${tone}">${status === "done" ? "00:00:00" : secondsToClock(remaining)}</div>
+        <div class="projection-count ${tone}" style="--exam-color: ${exam.color || "#8db1ff"}">${status === "done" ? "00:00:00" : secondsToClock(remaining)}</div>
         ${note}
         <div class="projection-clock">${today}目前時間 ${formatClock(now)}</div>
       `;
@@ -1910,6 +2252,7 @@
         },
         clockSettings,
         soundSettings,
+        uiTheme,
       };
 
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -1952,6 +2295,11 @@
             soundSettings = { ...soundSettings, ...data.soundSettings };
             localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
             loadSoundSettings();
+          }
+          if (data.uiTheme) {
+            uiTheme = data.uiTheme === "dark" ? "dark" : "light";
+            localStorage.setItem(UI_THEME_STORAGE_KEY, uiTheme);
+            loadUITheme();
           }
 
           saveExams();
@@ -2014,6 +2362,7 @@
     loadClassSettings();
     loadClockSettings();
     loadSoundSettings();
+    loadUITheme();
     renderAll();
     setInterval(renderCurrentClock, 1000);
   </script>
