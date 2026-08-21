@@ -190,6 +190,18 @@
       color: var(--blue);
     }
 
+    .management-tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin: 10px 2px;
+    }
+
+    .management-tools .secondary-button {
+      padding: 7px 6px;
+      font-size: 11px;
+    }
+
     .side-footer {
       padding: 10px 7px 0;
       border-top: 1px solid var(--line);
@@ -230,9 +242,10 @@
       gap: 10px;
     }
 
-    .clock-card {
-      padding: 8px 12px;
+    .exam-item {
+      padding: 10px 9px;
       border: 1px solid var(--line);
+      border-left: 5px solid var(--exam-color, var(--blue));
       border-radius: 12px;
       background: white;
       text-align: right;
@@ -362,6 +375,11 @@
       color: var(--red);
     }
 
+    .hero .hero-title,
+    .hero .countdown {
+      color: var(--exam-color, var(--blue));
+    }
+
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -411,19 +429,102 @@
       font-weight: 700;
     }
 
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
     input[type="number"],
+    input[type="color"],
     textarea,
     select {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 9px;
+      min-height: 42px;
+      border: 1px solid #d8e0eb;
+      border-radius: 11px;
       background: #f8fafc;
       color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
     }
 
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
     input[type="number"],
     select {
-      padding: 7px;
+      padding: 10px 12px;
+    }
+
+    input[type="color"] {
+      width: 58px;
+      min-width: 58px;
+      height: 42px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-picker-row input[type="color"] {
+      flex: 1;
+      width: 100%;
+      height: 48px;
+      min-width: 0;
+      border-radius: 10px;
+    }
+
+    .color-value {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .color-templates {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .color-template {
+      display: block;
+      width: 100%;
+      height: 34px;
+      min-width: 0;
+      padding: 0;
+      border: 2px solid transparent;
+      border-radius: 9px;
+      background: var(--template-color, #356AE6);
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    .color-template:hover,
+    .color-template:focus-visible {
+      border-color: #172033;
+      box-shadow: 0 0 0 3px #356ae633;
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .color-template:active {
+      transform: scale(0.97);
+    }
+
+    .color-template .color-dot {
+      display: none;
+    }
+
+    select {
+      appearance: none;
+      padding-right: 34px;
+      background-image: linear-gradient(45deg, transparent 50%, #6b778c 50%), linear-gradient(135deg, #6b778c 50%, transparent 50%);
+      background-position: calc(100% - 16px) 18px, calc(100% - 11px) 18px;
+      background-repeat: no-repeat;
+      background-size: 5px 5px, 5px 5px;
     }
 
     textarea {
@@ -433,11 +534,23 @@
       line-height: 1.5;
     }
 
+    input[type="text"]:hover,
+    input[type="date"]:hover,
+    input[type="time"]:hover,
+    input[type="number"]:hover,
+    input[type="color"]:hover,
+    select:hover,
+    textarea:hover {
+      border-color: #b9c9df;
+      background: #ffffff;
+    }
+
     input:focus,
     select:focus,
     textarea:focus {
       outline: 0;
       border-color: var(--blue);
+      background: white;
       box-shadow: 0 0 0 3px #356ae615;
     }
 
@@ -599,9 +712,12 @@
     }
 
     .modal {
-      width: min(560px, 100%);
-      padding: 24px;
-      border-radius: 18px;
+      width: min(600px, 100%);
+      max-height: min(720px, calc(100vh - 36px));
+      overflow: auto;
+      padding: 26px;
+      border: 1px solid #e0e7f0;
+      border-radius: 20px;
       background: white;
       box-shadow: 0 25px 80px #17203344;
     }
@@ -631,7 +747,18 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
+    }
+
+    .form-field {
+      min-width: 0;
+    }
+
+    .form-field .field-label {
+      margin-bottom: 7px;
+      color: #4d5b70;
+      font-size: 12px;
+      letter-spacing: 0.02em;
     }
 
     .form-field.full {
@@ -640,7 +767,15 @@
 
     .modal-actions {
       justify-content: flex-end;
-      margin-top: 20px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .modal-actions .primary-button,
+    .modal-actions .secondary-button {
+      min-width: 104px;
+      min-height: 42px;
     }
 
     .toast {
@@ -781,6 +916,11 @@
       line-height: 1.45;
     }
 
+    .projection .projection-title,
+    .projection .projection-count {
+      color: var(--exam-color, #8db1ff) !important;
+    }
+
     .projection-clock {
       margin-top: clamp(22px, 4vh, 45px);
       color: #7f8da3;
@@ -884,7 +1024,7 @@
         display: block;
       }
 
-      .sidebar {
+      .side-footer {
         min-height: auto;
         border-right: 0;
         border-bottom: 1px solid var(--line);
@@ -950,6 +1090,14 @@
         padding: 12px 16px;
       }
 
+      .modal {
+        padding: 20px;
+      }
+
+      .color-templates {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .projection-body {
         padding: 14px 18px 24px;
       }
@@ -975,6 +1123,12 @@
       </div>
 
       <div class="exam-list" id="examList"></div>
+
+      <div class="management-tools">
+        <button class="secondary-button" type="button" onclick="exportSettings()">匯出設定</button>
+        <button class="secondary-button" type="button" onclick="document.getElementById('importFile').click()">匯入設定</button>
+        <input id="importFile" type="file" accept="application/json" hidden onchange="importSettings(event)" />
+      </div>
 
       <div class="side-footer">
         資料會自動儲存在這台裝置的瀏覽器中。<br />
@@ -1045,6 +1199,28 @@
                 <label><input id="showSchedule" type="checkbox" onchange="updateClockSettings()" /> 顯示考試時段</label>
                 <label><input id="showNote" type="checkbox" onchange="updateClockSettings()" /> 顯示提醒</label>
               </div>
+            </div>
+          </details>
+
+          <details class="panel setting-panel">
+            <summary>聲音提示設定</summary>
+            <div class="setting-content">
+              <div class="check-row">
+                <label>
+                  <input id="soundEnabled" type="checkbox" onchange="updateSoundSettings()" />
+                  啟用聲音提示（預設關閉）
+                </label>
+              </div>
+              <div class="setting-row">
+                <span>提示音類型</span>
+                <select id="soundType" onchange="updateSoundSettings()">
+                  <option value="bell">清脆鈴聲</option>
+                  <option value="double">雙響提示</option>
+                  <option value="soft">柔和提示</option>
+                </select>
+              </div>
+              <button class="secondary-button" type="button" onclick="testSound()">測試提示音</button>
+              <div class="panel-hint">倒數結束、考試開始／結束與套用提醒時播放。</div>
             </div>
           </details>
 
@@ -1137,17 +1313,30 @@
           <label class="field-label" for="examDate">考試日期</label>
           <input id="examDate" type="date" />
         </div>
-        <div class="form-field">
-          <label class="field-label" for="examColor">顏色標籤</label>
-          <input id="examColor" type="color" value="#356ae6" />
-        </div>
+          <div class="form-field">
+            <label class="field-label" for="examColor">顏色標籤</label>
+            <div class="color-picker-row">
+              <input id="examColor" type="color" value="#356ae6" onchange="updateColorValue()" />
+              <span class="color-value" id="colorValue">#356AE6</span>
+            </div>
+            <div class="color-templates" aria-label="現成配色模板">
+              <button class="color-template" type="button" title="藍色教室 #356AE6" aria-label="藍色教室 #356AE6" style="--template-color: #356AE6" onclick="applyColorTemplate('#356AE6')"></button>
+              <button class="color-template" type="button" title="重要提醒 #D95757" aria-label="重要提醒 #D95757" style="--template-color: #D95757" onclick="applyColorTemplate('#D95757')"></button>
+              <button class="color-template" type="button" title="安心綠色 #2E9B73" aria-label="安心綠色 #2E9B73" style="--template-color: #2E9B73" onclick="applyColorTemplate('#2E9B73')"></button>
+              <button class="color-template" type="button" title="暖橘提醒 #D9822B" aria-label="暖橘提醒 #D9822B" style="--template-color: #D9822B" onclick="applyColorTemplate('#D9822B')"></button>
+              <button class="color-template" type="button" title="特殊紫色 #8056C7" aria-label="特殊紫色 #8056C7" style="--template-color: #8056C7" onclick="applyColorTemplate('#8056C7')"></button>
+              <button class="color-template" type="button" title="清爽青色 #168C8C" aria-label="清爽青色 #168C8C" style="--template-color: #168C8C" onclick="applyColorTemplate('#168C8C')"></button>
+              <button class="color-template" type="button" title="活力粉色 #D15A88" aria-label="活力粉色 #D15A88" style="--template-color: #D15A88" onclick="applyColorTemplate('#D15A88')"></button>
+              <button class="color-template" type="button" title="穩重灰藍 #52627A" aria-label="穩重灰藍 #52627A" style="--template-color: #52627A" onclick="applyColorTemplate('#52627A')"></button>
+            </div>
+          </div>
         <div class="form-field">
           <label class="field-label" for="examStart">開始時間</label>
-          <input id="examStart" type="time" value="08:35" />
+          <input id="examStart" type="time" />
         </div>
         <div class="form-field">
           <label class="field-label" for="examEnd">結束時間</label>
-          <input id="examEnd" type="time" value="09:30" />
+          <input id="examEnd" type="time" />
         </div>
         <div class="form-field full">
           <label class="field-label" for="examNote">預設提醒</label>
@@ -1176,6 +1365,7 @@
     const EXAM_STORAGE_KEY = "teacherExamBoard_v4";
     const CLASS_STORAGE_KEY = "teacherExamBoard_class_v1";
     const CLOCK_STORAGE_KEY = "teacherExamBoard_clock_v2";
+    const SOUND_STORAGE_KEY = "teacherExamBoard_sound_v1";
 
     const $ = (id) => document.getElementById(id);
     const pad = (value) => String(value).padStart(2, "0");
@@ -1184,6 +1374,8 @@
     let selectedExamId = null;
     let editingExamId = null;
     let toastTimer = null;
+    let soundContext = null;
+    let previousExamState = { id: null, status: null, second: null };
 
     let clockSettings = {
       format: "24",
@@ -1193,6 +1385,11 @@
       showSeconds: true,
       showSchedule: true,
       showNote: true,
+    };
+
+    let soundSettings = {
+      enabled: false,
+      type: "bell",
     };
 
     function localDate(date = new Date()) {
@@ -1344,6 +1541,72 @@
       showToast("課堂人數已保存");
     }
 
+    function loadSoundSettings() {
+      try {
+        soundSettings = {
+          ...soundSettings,
+          ...JSON.parse(localStorage.getItem(SOUND_STORAGE_KEY) || "{}"),
+        };
+      } catch {
+        // 使用預設關閉狀態
+      }
+
+      $("soundEnabled").checked = soundSettings.enabled;
+      $("soundType").value = soundSettings.type;
+    }
+
+    function updateSoundSettings() {
+      soundSettings = {
+        enabled: $("soundEnabled").checked,
+        type: $("soundType").value,
+      };
+      localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
+      showToast(soundSettings.enabled ? "聲音提示已開啟" : "聲音提示已關閉");
+    }
+
+    function getAudioContext() {
+      if (!soundContext) {
+        soundContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (soundContext.state === "suspended") soundContext.resume();
+      return soundContext;
+    }
+
+    function playTone(kind = "reminder") {
+      if (!soundSettings.enabled && kind !== "test") return;
+
+      const context = getAudioContext();
+      const now = context.currentTime;
+      const tones = soundSettings.type === "double"
+        ? [659, 784]
+        : soundSettings.type === "soft"
+          ? [523]
+          : [784, 988];
+      const repeat = kind === "end" ? 2 : 1;
+
+      for (let round = 0; round < repeat; round += 1) {
+        tones.forEach((frequency, index) => {
+          const start = now + round * 0.5 + index * 0.16;
+          const oscillator = context.createOscillator();
+          const gain = context.createGain();
+          oscillator.type = soundSettings.type === "soft" ? "sine" : "triangle";
+          oscillator.frequency.value = frequency;
+          gain.gain.setValueAtTime(0.0001, start);
+          gain.gain.exponentialRampToValueAtTime(0.16, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
+          oscillator.connect(gain);
+          gain.connect(context.destination);
+          oscillator.start(start);
+          oscillator.stop(start + 0.24);
+        });
+      }
+    }
+
+    function testSound() {
+      playTone("test");
+      showToast("已播放測試提示音");
+    }
+
     function loadClockSettings() {
       try {
         clockSettings = {
@@ -1384,8 +1647,8 @@
         ? list.map((exam) => {
           const status = getExamStatus(exam);
           const statusText = status === "running" ? "進行中" : status === "done" ? "已結束" : "尚未開始";
-          return `
-            <div class="exam-item ${status} ${exam.id === selectedExamId ? "active" : ""}" onclick="selectExam(${exam.id})">
+              return `
+            <div class="exam-item ${status} ${exam.id === selectedExamId ? "active" : ""}" style="--exam-color: ${exam.color || "#356ae6"}" onclick="selectExam(${exam.id})">
               <div class="exam-item-head">
                 <div class="exam-name" style="color: ${exam.color || "var(--ink)"}">
                   ${subjectIcon(exam.name)} ${escapeHtml(exam.name)}
@@ -1406,6 +1669,7 @@
     function renderHero() {
       const exam = currentExam();
       if (!exam) {
+        $("hero").style.removeProperty("--exam-color");
         $("hero").innerHTML = `
           <span class="status-badge">準備開始</span>
           <h2>先建立一場考試</h2>
@@ -1424,9 +1688,10 @@
       const tone = status === "running" ? "running" : status === "done" ? "" : remaining < 300 ? "urgent" : remaining < 1800 ? "warning" : "";
       const statusText = status === "running" ? "● 正在考試" : status === "done" ? "✓ 已完成" : "○ 尚未開始";
 
+      $("hero").style.setProperty("--exam-color", exam.color || "#356ae6");
       $("hero").innerHTML = `
         <span class="status-badge ${status}">${statusText}</span>
-        <h2 style="color: ${exam.color || "var(--ink)"}">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
+        <h2 class="hero-title">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
         <div class="hero-date">${formatDate(exam.date)} · ${formatTime(exam.start)} – ${formatTime(exam.end)}</div>
         <div class="count-label">${label}</div>
         <div class="countdown ${tone}" id="heroCountdown">${status === "done" ? "00:00:00" : secondsToClock(remaining)}</div>
@@ -1467,6 +1732,17 @@
         const endPoint = status === "running" ? dateTime(exam, exam.end) : dateTime(exam, exam.start);
         const remaining = (endPoint - now) / 1000;
         countdown.textContent = secondsToClock(remaining);
+
+        if (soundSettings.enabled) {
+          const currentSecond = Math.ceil(Math.max(0, remaining));
+          const changedExam = previousExamState.id !== exam.id;
+          const changedStatus = previousExamState.status && previousExamState.status !== status;
+          const reachedEnd = previousExamState.second > 0 && currentSecond === 0;
+
+          if (!changedExam && changedStatus) playTone(status === "running" ? "start" : "end");
+          if (!changedExam && reachedEnd) playTone("end");
+          previousExamState = { id: exam.id, status, second: currentSecond };
+        }
       }
 
       if ($("projection").classList.contains("open")) renderProjection();
@@ -1476,6 +1752,7 @@
       const projection = $("projection");
       const exam = currentExam();
       projection.className = `projection theme-${clockSettings.theme} size-${clockSettings.size}${projection.classList.contains("open") ? " open" : ""}`;
+      projection.style.setProperty("--exam-color", exam?.color || "#8db1ff");
 
       if (!exam) {
         $("projectionBody").innerHTML = "<div class=\"projection-title\">請回到老師設定新增考試</div>";
@@ -1496,7 +1773,7 @@
 
       $("projectionBody").innerHTML = `
         <div class="projection-status ${status}">${statusText}</div>
-        <h2 class="projection-title" style="color: ${exam.color || "#8db1ff"}">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
+        <h2 class="projection-title">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
         ${schedule}
         <div class="projection-label">${label}</div>
         <div class="projection-count ${tone}">${status === "done" ? "00:00:00" : secondsToClock(remaining)}</div>
@@ -1517,18 +1794,36 @@
       renderAll();
     }
 
+    function toTimeInput(date) {
+      return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
     function openExamModal(id = null) {
       editingExamId = id;
       const exam = id ? exams.find((item) => item.id === id) : null;
+      const now = new Date();
+      const defaultEnd = new Date(now.getTime() + 40 * 60 * 1000);
+
       $("modalTitle").textContent = exam ? "編輯考試" : "新增考試";
       $("examName").value = exam?.name || "";
-      $("examDate").value = exam?.date || localDate();
-      $("examStart").value = exam?.start || "08:35";
-      $("examEnd").value = exam?.end || "09:30";
+      $("examDate").value = exam?.date || localDate(now);
+      $("examStart").value = exam?.start || toTimeInput(now);
+      $("examEnd").value = exam?.end || toTimeInput(defaultEnd);
       $("examColor").value = exam?.color || "#356ae6";
+      $("colorValue").textContent = $("examColor").value.toUpperCase();
       $("examNote").value = exam?.note || "";
       $("examModal").classList.add("open");
       setTimeout(() => $("examName").focus(), 50);
+    }
+
+    function updateColorValue() {
+      $("colorValue").textContent = $("examColor").value.toUpperCase();
+    }
+
+    function applyColorTemplate(color) {
+      $("examColor").value = color;
+      updateColorValue();
+      showToast("已套用配色模板，儲存後會同步到看板");
     }
 
     function closeExamModal() {
@@ -1599,7 +1894,76 @@
       exam.note = text;
       saveExams();
       renderAll();
+      playTone("reminder");
       showToast(`已套用提醒：${text}`);
+    }
+
+    function exportSettings() {
+      const payload = {
+        format: "teacher-exam-board",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        exams,
+        classSettings: {
+          total: $("totalStudents").value,
+          present: $("presentStudents").value,
+        },
+        clockSettings,
+        soundSettings,
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `考試倒數看板設定_${localDate()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      showToast("設定檔已匯出");
+    }
+
+    function importSettings(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!data || data.format !== "teacher-exam-board" || !Array.isArray(data.exams)) {
+            throw new Error("格式不正確");
+          }
+
+          exams = data.exams.filter((exam) => exam.name && exam.date && exam.start && exam.end);
+          if (!exams.length) throw new Error("沒有可用的考試資料");
+
+          selectedExamId = exams[0].id;
+          if (data.classSettings) {
+            $("totalStudents").value = data.classSettings.total ?? 30;
+            $("presentStudents").value = data.classSettings.present ?? 30;
+            saveClassSettings();
+          }
+          if (data.clockSettings) {
+            clockSettings = { ...clockSettings, ...data.clockSettings };
+            localStorage.setItem(CLOCK_STORAGE_KEY, JSON.stringify(clockSettings));
+            loadClockSettings();
+          }
+          if (data.soundSettings) {
+            soundSettings = { ...soundSettings, ...data.soundSettings };
+            localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
+            loadSoundSettings();
+          }
+
+          saveExams();
+          renderAll();
+          showToast(`已匯入 ${exams.length} 場考試設定`);
+        } catch {
+          showToast("匯入失敗：請選擇正確的設定檔");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      reader.readAsText(file);
     }
 
     function saveExamNote() {
@@ -1649,6 +2013,7 @@
     loadExams();
     loadClassSettings();
     loadClockSettings();
+    loadSoundSettings();
     renderAll();
     setInterval(renderCurrentClock, 1000);
   </script>
