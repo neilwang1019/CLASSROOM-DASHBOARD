@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>老師的考試倒數看板</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #687386;
+      --line: #e5eaf1;
+      --paper: #ffffff;
+      --bg: #f4f7fb;
+      --blue: #356ae6;
+      --blue-soft: #edf3ff;
+      --green: #159a67;
+      --green-soft: #e8f8f1;
+      --orange: #d98216;
+      --orange-soft: #fff4df;
+      --red: #d84c4c;
+      --shadow: 0 12px 35px #26365012;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, "Noto Sans TC", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 276px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px;
+      background: var(--paper);
+      border-right: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 2px 7px 14px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--blue);
+      color: white;
+      font-size: 20px;
+    }
+
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+
+    .brand strong {
+      font-size: 16px;
+    }
+
+    .brand small {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .side-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 4px 7px 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .exam-list {
+      flex: 1;
+      overflow: auto;
+      padding: 2px;
+    }
+
+    .exam-item {
+      margin-bottom: 6px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+      transition: 0.2s;
+    }
+
+    .exam-item:hover {
+      border-color: #b6c9f5;
+      box-shadow: var(--shadow);
+    }
+
+    .exam-item.active {
+      padding: 9px;
+      border: 2px solid var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .exam-item.running {
+      border-color: #77d3ad;
+      background: var(--green-soft);
+    }
+
+    .exam-item.done {
+      opacity: 0.58;
+    }
+
+    .exam-item-head,
+    .next-head,
+    .setting-row,
+    .panel-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .exam-name {
+      overflow: hidden;
+      font-size: 14px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .exam-date,
+    .exam-time {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .exam-time {
+      font-size: 12px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 2px;
+    }
+
+    .icon-button,
+    .close-button {
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .icon-button {
+      padding: 4px;
+    }
+
+    .icon-button:hover,
+    .close-button:hover {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .side-footer {
+      padding: 10px 7px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .main {
+      width: min(1250px, 100%);
+      margin: 0 auto;
+      padding: 18px 24px 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 4px 0 0;
+      font-size: 24px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .clock-card {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+      text-align: right;
+      box-shadow: var(--shadow);
+    }
+
+    .clock-card small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .clock-card strong {
+      font-size: 19px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .primary-button,
+    .projection-button,
+    .secondary-button {
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-weight: 800;
+    }
+
+    .primary-button,
+    .projection-button {
+      border: 0;
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 6px 14px #356ae633;
+    }
+
+    .projection-button {
+      background: #172033;
+      box-shadow: none;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+
+    .primary-button:hover,
+    .projection-button:hover,
+    .secondary-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.97);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      align-items: start;
+      gap: 14px;
+    }
+
+    .hero {
+      height: 365px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: white;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .status-badge {
+      padding: 6px 11px;
+      border-radius: 99px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .status-badge.running {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .status-badge.done {
+      background: #eef0f3;
+      color: var(--muted);
+    }
+
+    .hero h2 {
+      margin: 11px 0 5px;
+      font-size: 32px;
+    }
+
+    .hero-date {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .count-label {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .countdown {
+      margin: 9px 0 17px;
+      color: var(--blue);
+      font-size: clamp(50px, 7vw, 84px);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown.running {
+      color: var(--green);
+    }
+
+    .countdown.warning {
+      color: var(--orange);
+    }
+
+    .countdown.urgent {
+      color: var(--red);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .side-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-heading h3,
+    .panel > h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .panel-hint,
+    .field-label,
+    .setting-row,
+    .attendance-text,
+    .next-time {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .attendance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #f8fafc;
+      color: var(--ink);
+    }
+
+    input[type="number"],
+    select {
+      padding: 7px;
+    }
+
+    textarea {
+      min-height: 52px;
+      resize: vertical;
+      padding: 8px;
+      line-height: 1.5;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 0;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px #356ae615;
+    }
+
+    .progress {
+      height: 6px;
+      margin-top: 6px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #edf0f5;
+    }
+
+    .progress-bar {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+    }
+
+    details.setting-panel {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    details.setting-panel summary {
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    details.setting-panel summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.setting-panel summary::after {
+      float: right;
+      color: var(--muted);
+      content: "+";
+    }
+
+    details.setting-panel[open] summary::after {
+      content: "−";
+    }
+
+    .setting-content {
+      display: grid;
+      gap: 8px;
+      padding: 10px 14px 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .setting-row select {
+      width: 138px;
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+
+    .check-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .check-row label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .reminder-group {
+      margin-top: 8px;
+    }
+
+    .reminder-group-title {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .reminder-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .reminder-button {
+      padding: 6px 5px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      color: var(--ink);
+      font-size: 11px;
+      line-height: 1.25;
+      text-align: left;
+    }
+
+    .reminder-button:hover {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .current-reminder {
+      min-height: 36px;
+      margin-top: 8px;
+      padding: 7px 8px;
+      border-radius: 9px;
+      background: var(--orange-soft);
+      color: #815718;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .clear-reminder {
+      margin-top: 5px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .next-panel {
+      margin-top: 0;
+    }
+
+    .next-name {
+      display: block;
+      margin-top: 5px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: #17203366;
+    }
+
+    .modal-backdrop.open {
+      display: grid;
+    }
+
+    .modal {
+      width: min(560px, 100%);
+      padding: 24px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 25px 80px #17203344;
+    }
+
+    .modal-header,
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-header {
+      margin-bottom: 18px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .close-button {
+      padding: 6px 10px;
+      background: #f2f4f7;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .modal-actions {
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      z-index: 100;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: #172033;
+      color: white;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 20px);
+      transition: 0.25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* 投影模式 */
+    .projection {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      overflow: hidden;
+      background: #101827;
+      color: white;
+    }
+
+    .projection.open {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .projection-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 24px;
+      color: #b9c5d8;
+      font-size: 13px;
+    }
+
+    .projection-brand {
+      font-weight: 800;
+    }
+
+    .projection-exit {
+      padding: 9px 13px;
+      border: 1px solid #ffffff44;
+      border-radius: 10px;
+      background: #ffffff18;
+      color: white;
+      font-weight: 800;
+    }
+
+    .projection-exit:hover {
+      background: #ffffff2b;
+    }
+
+    .projection-body {
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 28px 34px;
+      text-align: center;
+    }
+
+    .projection-status {
+      padding: 8px 15px;
+      border-radius: 99px;
+      background: #ffffff12;
+      color: #cbd5e1;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .projection-status.running {
+      background: #0b8f5d33;
+      color: #6ee7b7;
+    }
+
+    .projection-title {
+      margin: 16px 0 5px;
+      font-size: clamp(28px, 4vw, 58px);
+      line-height: 1.15;
+    }
+
+    .projection-date,
+    .projection-label {
+      color: #aab7c9;
+      font-size: clamp(14px, 1.5vw, 20px);
+    }
+
+    .projection-label {
+      margin-top: clamp(24px, 4vh, 48px);
+    }
+
+    .projection-count {
+      margin: 12px 0 26px;
+      color: #8db1ff;
+      font-size: clamp(72px, 13vw, 190px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .projection-count.running {
+      color: #61e5ad;
+    }
+
+    .projection-count.warning {
+      color: #ffc56e;
+    }
+
+    .projection-count.urgent {
+      color: #ff8585;
+    }
+
+    .projection-note {
+      max-width: min(820px, 82vw);
+      min-height: 42px;
+      padding: 11px 19px;
+      border-radius: 12px;
+      background: #ffffff12;
+      color: #f8fafc;
+      font-size: clamp(15px, 1.7vw, 25px);
+      line-height: 1.45;
+    }
+
+    .projection-clock {
+      margin-top: clamp(22px, 4vh, 45px);
+      color: #7f8da3;
+      font-size: clamp(13px, 1.3vw, 17px);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .projection.theme-soft {
+      background: #f4f7fb;
+      color: var(--ink);
+    }
+
+    .projection.theme-soft .projection-top,
+    .projection.theme-soft .projection-date,
+    .projection.theme-soft .projection-label,
+    .projection.theme-soft .projection-clock {
+      color: var(--muted);
+    }
+
+    .projection.theme-soft .projection-status,
+    .projection.theme-soft .projection-note {
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 8px 26px #26365014;
+    }
+
+    .projection.theme-soft .projection-exit {
+      border-color: #aeb9c8;
+      background: white;
+      color: var(--ink);
+    }
+
+    .projection.theme-led {
+      background: #07100d;
+    }
+
+    .projection.theme-led .projection-count {
+      color: #61e5ad;
+      text-shadow: 0 0 18px #61e5ad88;
+      font-family: monospace;
+    }
+
+    .projection.theme-night {
+      background: #050b16;
+    }
+
+    .projection.theme-warm {
+      background: #2a211b;
+    }
+
+    .projection.theme-warm .projection-count {
+      color: #ffd38b;
+    }
+
+    .projection.theme-mint {
+      background: #eaf7f3;
+      color: #173b35;
+    }
+
+    .projection.theme-mint .projection-top,
+    .projection.theme-mint .projection-date,
+    .projection.theme-mint .projection-label,
+    .projection.theme-mint .projection-clock {
+      color: #54766e;
+    }
+
+    .projection.theme-mint .projection-exit {
+      border-color: #9dc8ba;
+      background: white;
+      color: #173b35;
+    }
+
+    .projection.theme-mono {
+      background: white;
+      color: #111;
+    }
+
+    .projection.theme-mono .projection-top,
+    .projection.theme-mono .projection-date,
+    .projection.theme-mono .projection-label,
+    .projection.theme-mono .projection-clock {
+      color: #555;
+    }
+
+    .projection.theme-mono .projection-exit {
+      border-color: #111;
+      background: #111;
+      color: white;
+    }
+
+    .projection.size-large .projection-count {
+      font-size: clamp(86px, 16vw, 230px);
+    }
+
+    .projection.size-extra .projection-count {
+      font-size: clamp(100px, 19vw, 280px);
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        display: block;
+      }
+
+      .sidebar {
+        min-height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .exam-list {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+      }
+
+      .exam-item {
+        min-width: 210px;
+        margin: 0;
+      }
+
+      .main {
+        padding: 18px 14px 24px;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        height: auto;
+        min-height: 400px;
+      }
+
+      .side-stack {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar,
+      .top-actions {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .top-actions {
+        width: 100%;
+      }
+
+      .clock-card {
+        width: 100%;
+        text-align: left;
+      }
+
+      .side-stack,
+      .form-grid {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-field.full {
+        grid-column: auto;
+      }
+
+      .projection-top {
+        padding: 12px 16px;
+      }
+
+      .projection-body {
+        padding: 14px 18px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">⏱</div>
+        <div>
+          <strong>考試倒數看板</strong>
+          <small>老師的課堂小幫手</small>
+        </div>
+      </div>
+
+      <div class="side-heading">
+        <span>我的考試</span>
+        <button class="primary-button" type="button" onclick="openExamModal()">
+          ＋ 新增考試
+        </button>
+      </div>
+
+      <div class="exam-list" id="examList"></div>
+
+      <div class="side-footer">
+        資料會自動儲存在這台裝置的瀏覽器中。<br />
+        由 yixiang1019tw 製作維護 · 保有一切權利
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">CLASSROOM DASHBOARD</div>
+          <h1>今天的考試安排</h1>
+        </div>
+
+        <div class="top-actions">
+          <button class="projection-button" type="button" onclick="startProjection()">
+            ⛶ 全螢幕投影
+          </button>
+          <div class="clock-card" id="clockCard">
+            <small id="clockDate">正在讀取日期</small>
+            <strong id="clockTime">--:--:--</strong>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard-grid">
+        <section class="hero" id="hero"></section>
+
+        <aside class="side-stack">
+          <details class="panel setting-panel">
+            <summary>時間顯示設定</summary>
+            <div class="setting-content">
+              <div class="setting-row">
+                <span>小時格式</span>
+                <select id="clockFormat" onchange="updateClockSettings()">
+                  <option value="24">24 小時制</option>
+                  <option value="12">12 小時制</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <span>投影樣式</span>
+                <select id="clockTheme" onchange="updateClockSettings()">
+                  <option value="classic">清楚藍白</option>
+                  <option value="digital">數位時鐘</option>
+                  <option value="led">LED 深色</option>
+                  <option value="soft">柔和淺色</option>
+                  <option value="contrast">高對比</option>
+                  <option value="flip">翻頁感</option>
+                  <option value="night">深夜藍</option>
+                  <option value="warm">暖色教室</option>
+                  <option value="mint">薄荷清爽</option>
+                  <option value="mono">黑白簡潔</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <span>投影字級</span>
+                <select id="projectionSize" onchange="updateClockSettings()">
+                  <option value="normal">標準</option>
+                  <option value="large">大字</option>
+                  <option value="extra">超大字</option>
+                </select>
+              </div>
+              <div class="check-row">
+                <label><input id="showDate" type="checkbox" onchange="updateClockSettings()" /> 顯示日期</label>
+                <label><input id="showSeconds" type="checkbox" onchange="updateClockSettings()" /> 顯示秒數</label>
+              </div>
+              <div class="check-row">
+                <label><input id="showSchedule" type="checkbox" onchange="updateClockSettings()" /> 顯示考試時段</label>
+                <label><input id="showNote" type="checkbox" onchange="updateClockSettings()" /> 顯示提醒</label>
+              </div>
+            </div>
+          </details>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <h3>課堂人數</h3>
+              <span class="panel-hint">可課前設定</span>
+            </div>
+            <div class="attendance-grid">
+              <div>
+                <label class="field-label" for="totalStudents">應到人數</label>
+                <input id="totalStudents" type="number" min="0" onchange="saveClassSettings()" />
+              </div>
+              <div>
+                <label class="field-label" for="presentStudents">實到人數</label>
+                <input id="presentStudents" type="number" min="0" onchange="saveClassSettings()" />
+              </div>
+            </div>
+            <div class="progress"><span class="progress-bar" id="attendanceBar"></span></div>
+            <div class="attendance-text" id="attendanceText"></div>
+          </section>
+
+          <section class="panel reminder-panel">
+            <div class="panel-heading">
+              <h3>課堂提醒</h3>
+              <span class="panel-hint">點一下立即套用</span>
+            </div>
+
+            <div class="reminder-group">
+              <span class="reminder-group-title">開始前</span>
+              <div class="reminder-grid">
+                <button class="reminder-button" type="button" onclick="applyReminder('請準備文具，並確認桌面整潔。')">準備文具</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('請寫上班級、座號與姓名。')">寫班級座號</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('請先看清楚題目與作答說明。')">先看作答說明</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('請確認試卷頁數是否完整。')">確認試卷頁數</button>
+              </div>
+            </div>
+
+            <div class="reminder-group">
+              <span class="reminder-group-title">考試中</span>
+              <div class="reminder-grid">
+                <button class="reminder-button" type="button" onclick="applyReminder('請保持安靜，專心作答。')">保持安靜</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('剩下 10 分鐘，請掌握時間。')">剩 10 分鐘</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('剩下 5 分鐘，請加快速度。')">剩 5 分鐘</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('請檢查還沒有作答的題目。')">檢查未答題</button>
+              </div>
+            </div>
+
+            <div class="reminder-group">
+              <span class="reminder-group-title">結束時</span>
+              <div class="reminder-grid">
+                <button class="reminder-button" type="button" onclick="applyReminder('時間到，請立即停筆。')">時間到停筆</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('請將答案卷整理好，放在桌面右上角。')">整理答案卷</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('請依照座號順序交卷。')">依序交卷</button>
+                <button class="reminder-button" type="button" onclick="applyReminder('交卷前請再檢查一次姓名。')">檢查姓名</button>
+              </div>
+            </div>
+
+            <div class="current-reminder" id="currentReminder">尚未選擇提醒</div>
+            <textarea id="customReminder" placeholder="需要自訂時再輸入提醒文字" onchange="saveExamNote()"></textarea>
+            <button class="clear-reminder" type="button" onclick="clearReminder()">清除目前提醒</button>
+          </section>
+
+          <section class="panel next-panel">
+            <div class="next-head">
+              <span class="panel-hint">接下來</span>
+              <span class="panel-hint" id="examCount"></span>
+            </div>
+            <strong class="next-name" id="nextExam">尚未建立考試</strong>
+            <div class="next-time" id="nextTime"></div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="examModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">新增考試</h2>
+        <button class="close-button" type="button" onclick="closeExamModal()">✕</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field full">
+          <label class="field-label" for="examName">科目名稱</label>
+          <input id="examName" type="text" placeholder="例如：數學第一次段考" />
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="examDate">考試日期</label>
+          <input id="examDate" type="date" />
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="examColor">顏色標籤</label>
+          <input id="examColor" type="color" value="#356ae6" />
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="examStart">開始時間</label>
+          <input id="examStart" type="time" value="08:35" />
+        </div>
+        <div class="form-field">
+          <label class="field-label" for="examEnd">結束時間</label>
+          <input id="examEnd" type="time" value="09:30" />
+        </div>
+        <div class="form-field full">
+          <label class="field-label" for="examNote">預設提醒</label>
+          <textarea id="examNote" placeholder="可直接輸入或稍後從右側套用現成提醒"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="secondary-button" type="button" onclick="closeExamModal()">取消</button>
+        <button class="primary-button" type="button" onclick="saveExam()">儲存考試</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="projection" id="projection">
+    <div class="projection-top">
+      <span class="projection-brand">⏱ 考試倒數看板 · 投影模式</span>
+      <button class="projection-exit" type="button" onclick="stopProjection()">退出投影　Esc</button>
+    </div>
+    <div class="projection-body" id="projectionBody"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const EXAM_STORAGE_KEY = "teacherExamBoard_v4";
+    const CLASS_STORAGE_KEY = "teacherExamBoard_class_v1";
+    const CLOCK_STORAGE_KEY = "teacherExamBoard_clock_v2";
+
+    const $ = (id) => document.getElementById(id);
+    const pad = (value) => String(value).padStart(2, "0");
+
+    let exams = [];
+    let selectedExamId = null;
+    let editingExamId = null;
+    let toastTimer = null;
+
+    let clockSettings = {
+      format: "24",
+      theme: "classic",
+      size: "normal",
+      showDate: true,
+      showSeconds: true,
+      showSchedule: true,
+      showNote: true,
+    };
+
+    function localDate(date = new Date()) {
+      return [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join("-");
+    }
+
+    function dateTime(exam, time) {
+      return new Date(`${exam.date}T${time}:00`);
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(`${dateString}T00:00:00`);
+      const weekday = ["日", "一", "二", "三", "四", "五", "六"][date.getDay()];
+      return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日（${weekday}）`;
+    }
+
+    function formatTime(time) {
+      const [hour, minute] = time.split(":").map(Number);
+      const period = hour < 12 ? "上午" : "下午";
+      const displayHour = hour % 12 || 12;
+      return `${period} ${pad(displayHour)}:${pad(minute)}`;
+    }
+
+    function formatClock(date = new Date()) {
+      let hour = date.getHours();
+      const period = hour < 12 ? "上午" : "下午";
+
+      if (clockSettings.format === "12") {
+        hour = hour % 12 || 12;
+      }
+
+      let result = `${pad(hour)}:${pad(date.getMinutes())}`;
+      if (clockSettings.showSeconds) result += `:${pad(date.getSeconds())}`;
+      return clockSettings.format === "12" ? `${result} ${period}` : result;
+    }
+
+    function secondsToClock(seconds) {
+      const safeSeconds = Math.max(0, Math.floor(seconds));
+      const hours = Math.floor(safeSeconds / 3600);
+      const minutes = Math.floor((safeSeconds % 3600) / 60);
+      const rest = safeSeconds % 60;
+      return `${pad(hours)}:${pad(minutes)}:${pad(rest)}`;
+    }
+
+    function getExamStatus(exam, now = new Date()) {
+      const start = dateTime(exam, exam.start);
+      const end = dateTime(exam, exam.end);
+      if (now < start) return "upcoming";
+      if (now < end) return "running";
+      return "done";
+    }
+
+    function sortedExams() {
+      return [...exams].sort((a, b) => `${a.date}${a.start}`.localeCompare(`${b.date}${b.start}`));
+    }
+
+    function currentExam() {
+      return exams.find((exam) => exam.id === selectedExamId) || null;
+    }
+
+    function bestExam() {
+      const list = sortedExams();
+      return list.find((exam) => getExamStatus(exam) === "running")
+        || list.find((exam) => getExamStatus(exam) === "upcoming")
+        || list.find((exam) => getExamStatus(exam) === "done")
+        || null;
+    }
+
+    function subjectIcon(name) {
+      if (/數學|數/.test(name)) return "📐";
+      if (/英文|英語|英/.test(name)) return "🌐";
+      if (/自然|理化/.test(name)) return "🔬";
+      if (/社會|歷史|地理/.test(name)) return "🌏";
+      return "📖";
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[character]));
+    }
+
+    function showToast(message) {
+      $("toast").textContent = message;
+      $("toast").classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => $("toast").classList.remove("show"), 2200);
+    }
+
+    function saveExams() {
+      localStorage.setItem(EXAM_STORAGE_KEY, JSON.stringify(exams));
+    }
+
+    function loadExams() {
+      try {
+        exams = JSON.parse(localStorage.getItem(EXAM_STORAGE_KEY)) || [];
+      } catch {
+        exams = [];
+      }
+
+      if (!exams.length) {
+        const today = localDate();
+        exams = [
+          {
+            id: Date.now(),
+            name: "國語小考",
+            date: today,
+            start: "09:00",
+            end: "09:40",
+            color: "#356ae6",
+            note: "請寫上班級、座號與姓名。",
+          },
+          {
+            id: Date.now() + 1,
+            name: "數學練習卷",
+            date: today,
+            start: "10:10",
+            end: "10:50",
+            color: "#159a67",
+            note: "",
+          },
+        ];
+      }
+
+      selectedExamId = bestExam()?.id || exams[0]?.id || null;
+    }
+
+    function loadClassSettings() {
+      let settings = { total: 30, present: 30 };
+      try {
+        settings = { ...settings, ...JSON.parse(localStorage.getItem(CLASS_STORAGE_KEY) || "{}") };
+      } catch {
+        // 使用預設人數
+      }
+      $("totalStudents").value = settings.total;
+      $("presentStudents").value = settings.present;
+    }
+
+    function saveClassSettings() {
+      localStorage.setItem(CLASS_STORAGE_KEY, JSON.stringify({
+        total: $("totalStudents").value,
+        present: $("presentStudents").value,
+      }));
+      renderSidebarPanels();
+      showToast("課堂人數已保存");
+    }
+
+    function loadClockSettings() {
+      try {
+        clockSettings = {
+          ...clockSettings,
+          ...JSON.parse(localStorage.getItem(CLOCK_STORAGE_KEY) || "{}"),
+        };
+      } catch {
+        // 使用預設時間設定
+      }
+
+      $("clockFormat").value = clockSettings.format;
+      $("clockTheme").value = clockSettings.theme;
+      $("projectionSize").value = clockSettings.size;
+      $("showDate").checked = clockSettings.showDate;
+      $("showSeconds").checked = clockSettings.showSeconds;
+      $("showSchedule").checked = clockSettings.showSchedule;
+      $("showNote").checked = clockSettings.showNote;
+    }
+
+    function updateClockSettings() {
+      clockSettings = {
+        format: $("clockFormat").value,
+        theme: $("clockTheme").value,
+        size: $("projectionSize").value,
+        showDate: $("showDate").checked,
+        showSeconds: $("showSeconds").checked,
+        showSchedule: $("showSchedule").checked,
+        showNote: $("showNote").checked,
+      };
+      localStorage.setItem(CLOCK_STORAGE_KEY, JSON.stringify(clockSettings));
+      renderAll();
+      showToast("時間與投影設定已保存");
+    }
+
+    function renderExamList() {
+      const list = sortedExams();
+      $("examList").innerHTML = list.length
+        ? list.map((exam) => {
+          const status = getExamStatus(exam);
+          const statusText = status === "running" ? "進行中" : status === "done" ? "已結束" : "尚未開始";
+          return `
+            <div class="exam-item ${status} ${exam.id === selectedExamId ? "active" : ""}" onclick="selectExam(${exam.id})">
+              <div class="exam-item-head">
+                <div class="exam-name" style="color: ${exam.color || "var(--ink)"}">
+                  ${subjectIcon(exam.name)} ${escapeHtml(exam.name)}
+                </div>
+                <div class="item-actions">
+                  <button class="icon-button" type="button" title="編輯" onclick="openExamModal(${exam.id}); event.stopPropagation()">✎</button>
+                  <button class="icon-button" type="button" title="刪除" onclick="removeExam(${exam.id}); event.stopPropagation()">🗑</button>
+                </div>
+              </div>
+              <div class="exam-date">${formatDate(exam.date)} · ${statusText}</div>
+              <div class="exam-time">${formatTime(exam.start)} – ${formatTime(exam.end)}</div>
+            </div>
+          `;
+        }).join("")
+        : `<div class="panel-hint" style="padding: 30px 10px; text-align: center;">還沒有考試，請按「新增考試」。</div>`;
+    }
+
+    function renderHero() {
+      const exam = currentExam();
+      if (!exam) {
+        $("hero").innerHTML = `
+          <span class="status-badge">準備開始</span>
+          <h2>先建立一場考試</h2>
+          <div class="hero-date">建立後會自動顯示倒數時間</div>
+          <button class="primary-button" type="button" onclick="openExamModal()">＋ 新增第一場考試</button>
+        `;
+        return;
+      }
+
+      const status = getExamStatus(exam);
+      const now = new Date();
+      const start = dateTime(exam, exam.start);
+      const end = dateTime(exam, exam.end);
+      const remaining = status === "upcoming" ? (start - now) / 1000 : status === "running" ? (end - now) / 1000 : 0;
+      const label = status === "upcoming" ? `距離「${escapeHtml(exam.name)}」開始還有` : status === "running" ? "考試進行中，剩餘時間" : "這場考試已經結束";
+      const tone = status === "running" ? "running" : status === "done" ? "" : remaining < 300 ? "urgent" : remaining < 1800 ? "warning" : "";
+      const statusText = status === "running" ? "● 正在考試" : status === "done" ? "✓ 已完成" : "○ 尚未開始";
+
+      $("hero").innerHTML = `
+        <span class="status-badge ${status}">${statusText}</span>
+        <h2 style="color: ${exam.color || "var(--ink)"}">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
+        <div class="hero-date">${formatDate(exam.date)} · ${formatTime(exam.start)} – ${formatTime(exam.end)}</div>
+        <div class="count-label">${label}</div>
+        <div class="countdown ${tone}" id="heroCountdown">${status === "done" ? "00:00:00" : secondsToClock(remaining)}</div>
+        <div class="hero-actions">
+          <button class="primary-button" type="button" onclick="openExamModal(${exam.id})">✎ 編輯這場考試</button>
+          <button class="secondary-button" type="button" onclick="duplicateExam(${exam.id})">複製一場</button>
+        </div>
+      `;
+    }
+
+    function renderSidebarPanels() {
+      const exam = currentExam();
+      const total = Number($("totalStudents").value) || 0;
+      const present = Number($("presentStudents").value) || 0;
+      const ratio = total ? Math.min(100, (present / total) * 100) : 0;
+
+      $("attendanceBar").style.width = `${ratio}%`;
+      $("attendanceText").textContent = `目前 ${present} / ${total} 人到場`;
+      $("currentReminder").textContent = exam?.note || "尚未選擇提醒";
+      $("customReminder").value = exam?.note || "";
+
+      const next = sortedExams().find((item) => getExamStatus(item) !== "done");
+      $("examCount").textContent = `${exams.length} 場`;
+      $("nextExam").textContent = next ? `${subjectIcon(next.name)} ${next.name}` : "今天沒有待考試";
+      $("nextTime").textContent = next ? `${formatDate(next.date)} · ${formatTime(next.start)}` : "可按「新增考試」安排下一場";
+    }
+
+    function renderCurrentClock() {
+      const now = new Date();
+      $("clockDate").textContent = clockSettings.showDate ? formatDate(localDate(now)) : "";
+      $("clockDate").style.display = clockSettings.showDate ? "block" : "none";
+      $("clockTime").textContent = formatClock(now);
+
+      const exam = currentExam();
+      const countdown = $("heroCountdown");
+      if (exam && countdown && getExamStatus(exam) !== "done") {
+        const status = getExamStatus(exam, now);
+        const endPoint = status === "running" ? dateTime(exam, exam.end) : dateTime(exam, exam.start);
+        const remaining = (endPoint - now) / 1000;
+        countdown.textContent = secondsToClock(remaining);
+      }
+
+      if ($("projection").classList.contains("open")) renderProjection();
+    }
+
+    function renderProjection() {
+      const projection = $("projection");
+      const exam = currentExam();
+      projection.className = `projection theme-${clockSettings.theme} size-${clockSettings.size}${projection.classList.contains("open") ? " open" : ""}`;
+
+      if (!exam) {
+        $("projectionBody").innerHTML = "<div class=\"projection-title\">請回到老師設定新增考試</div>";
+        return;
+      }
+
+      const now = new Date();
+      const status = getExamStatus(exam, now);
+      const start = dateTime(exam, exam.start);
+      const end = dateTime(exam, exam.end);
+      const remaining = status === "upcoming" ? (start - now) / 1000 : status === "running" ? (end - now) / 1000 : 0;
+      const tone = status === "running" ? "running" : status === "done" ? "" : remaining < 300 ? "urgent" : remaining < 1800 ? "warning" : "";
+      const statusText = status === "running" ? "● 考試進行中" : status === "done" ? "✓ 本場已結束" : "○ 尚未開始";
+      const label = status === "upcoming" ? "距離開始還有" : status === "running" ? "剩餘時間" : "考試已結束";
+      const schedule = clockSettings.showSchedule ? `<div class="projection-date">${formatDate(exam.date)} · ${formatTime(exam.start)} – ${formatTime(exam.end)}</div>` : "";
+      const note = clockSettings.showNote ? `<div class="projection-note">${escapeHtml(exam.note || "請依照老師指示進行。")}</div>` : "";
+      const today = clockSettings.showDate ? `${formatDate(localDate(now))} · ` : "";
+
+      $("projectionBody").innerHTML = `
+        <div class="projection-status ${status}">${statusText}</div>
+        <h2 class="projection-title" style="color: ${exam.color || "#8db1ff"}">${subjectIcon(exam.name)} ${escapeHtml(exam.name)}</h2>
+        ${schedule}
+        <div class="projection-label">${label}</div>
+        <div class="projection-count ${tone}">${status === "done" ? "00:00:00" : secondsToClock(remaining)}</div>
+        ${note}
+        <div class="projection-clock">${today}目前時間 ${formatClock(now)}</div>
+      `;
+    }
+
+    function renderAll() {
+      renderExamList();
+      renderHero();
+      renderSidebarPanels();
+      renderCurrentClock();
+    }
+
+    function selectExam(id) {
+      selectedExamId = id;
+      renderAll();
+    }
+
+    function openExamModal(id = null) {
+      editingExamId = id;
+      const exam = id ? exams.find((item) => item.id === id) : null;
+      $("modalTitle").textContent = exam ? "編輯考試" : "新增考試";
+      $("examName").value = exam?.name || "";
+      $("examDate").value = exam?.date || localDate();
+      $("examStart").value = exam?.start || "08:35";
+      $("examEnd").value = exam?.end || "09:30";
+      $("examColor").value = exam?.color || "#356ae6";
+      $("examNote").value = exam?.note || "";
+      $("examModal").classList.add("open");
+      setTimeout(() => $("examName").focus(), 50);
+    }
+
+    function closeExamModal() {
+      $("examModal").classList.remove("open");
+      editingExamId = null;
+    }
+
+    function saveExam() {
+      const data = {
+        name: $("examName").value.trim(),
+        date: $("examDate").value,
+        start: $("examStart").value,
+        end: $("examEnd").value,
+        color: $("examColor").value,
+        note: $("examNote").value.trim(),
+      };
+
+      if (!data.name || !data.date || !data.start || !data.end) {
+        showToast("請填寫科目、日期與完整時間");
+        return;
+      }
+
+      if (data.end <= data.start) {
+        showToast("結束時間必須晚於開始時間");
+        return;
+      }
+
+      if (editingExamId) {
+        Object.assign(exams.find((exam) => exam.id === editingExamId), data);
+        selectedExamId = editingExamId;
+        showToast("考試內容已更新");
+      } else {
+        data.id = Date.now();
+        exams.push(data);
+        selectedExamId = data.id;
+        showToast("考試已建立");
+      }
+
+      saveExams();
+      closeExamModal();
+      renderAll();
+    }
+
+    function removeExam(id) {
+      const exam = exams.find((item) => item.id === id);
+      if (!exam || !confirm(`確定要刪除「${exam.name}」嗎？`)) return;
+      exams = exams.filter((item) => item.id !== id);
+      selectedExamId = bestExam()?.id || exams[0]?.id || null;
+      saveExams();
+      renderAll();
+      showToast("考試已刪除");
+    }
+
+    function duplicateExam(id) {
+      const exam = exams.find((item) => item.id === id);
+      if (!exam) return;
+      const copy = { ...exam, id: Date.now(), name: `${exam.name}（複製）` };
+      exams.push(copy);
+      selectedExamId = copy.id;
+      saveExams();
+      renderAll();
+      showToast("已複製考試，請按編輯調整日期");
+    }
+
+    function applyReminder(text) {
+      const exam = currentExam();
+      if (!exam) return;
+      exam.note = text;
+      saveExams();
+      renderAll();
+      showToast(`已套用提醒：${text}`);
+    }
+
+    function saveExamNote() {
+      const exam = currentExam();
+      if (!exam) return;
+      exam.note = $("customReminder").value.trim();
+      saveExams();
+      renderSidebarPanels();
+      renderProjection();
+    }
+
+    function clearReminder() {
+      const exam = currentExam();
+      if (!exam) return;
+      exam.note = "";
+      saveExams();
+      renderAll();
+      showToast("已清除目前提醒");
+    }
+
+    function startProjection() {
+      renderProjection();
+      $("projection").classList.add("open");
+      document.body.style.overflow = "hidden";
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    }
+
+    function stopProjection() {
+      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+      $("projection").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    $("examModal").addEventListener("click", (event) => {
+      if (event.target.id === "examModal") closeExamModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && $("projection").classList.contains("open")) stopProjection();
+      if (event.key === "Escape" && $("examModal").classList.contains("open")) closeExamModal();
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement && $("projection").classList.contains("open")) stopProjection();
+    });
+
+    loadExams();
+    loadClassSettings();
+    loadClockSettings();
+    renderAll();
+    setInterval(renderCurrentClock, 1000);
+  </script>
+</body>
+</html>
