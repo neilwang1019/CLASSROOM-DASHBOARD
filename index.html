@@ -254,6 +254,125 @@
       gap: 10px;
     }
 
+    .theme-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 5px 14px #26365012;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    .theme-switch:hover {
+      border-color: #9bb5e8;
+      box-shadow: 0 7px 18px #2636501c;
+      transform: translateY(-1px);
+    }
+
+    .theme-icon {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .theme-icon-light {
+      background: #fff4c2;
+      color: #b77900;
+    }
+
+    .theme-icon-dark {
+      background: #24344f;
+      color: #dbeafe;
+    }
+
+    .theme-switch-copy {
+      display: flex;
+      min-width: 40px;
+      flex-direction: column;
+      gap: 1px;
+      line-height: 1;
+    }
+
+    .theme-switch-label {
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .theme-switch-hint {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .theme-switch input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .theme-switch-track {
+      position: relative;
+      display: block;
+      width: 40px;
+      height: 22px;
+      flex: 0 0 auto;
+      border: 1px solid #c6d2e2;
+      border-radius: 999px;
+      background: #e8eef6;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .theme-switch-thumb {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border: 1px solid #d2dce9;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 5px #17203333;
+      transition: transform 0.2s;
+    }
+
+    .theme-switch input:checked + .theme-switch-track {
+      border-color: #244fba;
+      background: #356ae6;
+    }
+
+    .theme-switch input:checked + .theme-switch-track .theme-switch-thumb {
+      transform: translateX(18px);
+    }
+
+    body[data-ui-theme="dark"] .theme-switch {
+      border-color: #405574;
+      background: #172235;
+      color: #edf4ff;
+    }
+
+    body[data-ui-theme="dark"] .theme-switch-hint {
+      color: #9fb0c8;
+    }
+
+    .theme-switch:focus-within {
+      outline: 3px solid #356ae633;
+      outline-offset: 2px;
+    }
+
     .exam-item {
       padding: 10px 9px;
       border: 1px solid var(--line);
@@ -1422,6 +1541,295 @@
         padding: 14px 18px 24px;
       }
     }
+    /* 上線版緊湊佈局：保留觸控尺寸，減少無效垂直空間 */
+    .main {
+      padding: 12px 20px 18px;
+    }
+
+    .topbar {
+      margin-bottom: 10px;
+    }
+
+    .dashboard-grid {
+      gap: 10px;
+    }
+
+    .hero {
+      height: 320px;
+      padding: 16px;
+    }
+
+    .hero h2 {
+      margin: 8px 0 4px;
+      font-size: 29px;
+    }
+
+    .count-label {
+      margin-top: 11px;
+    }
+
+    .countdown {
+      margin: 7px 0 12px;
+    }
+
+    .side-stack {
+      gap: 8px;
+    }
+
+    .panel {
+      padding: 11px;
+    }
+
+    .attendance-grid {
+      margin-top: 7px;
+    }
+
+    details.setting-panel summary {
+      padding: 9px 12px;
+    }
+
+    .setting-content {
+      gap: 6px;
+      padding: 7px 12px 9px;
+    }
+
+    .reminder-group {
+      margin-top: 6px;
+    }
+
+    .reminder-button {
+      padding: 5px 5px;
+    }
+
+    .current-reminder {
+      min-height: 30px;
+      margin-top: 6px;
+      padding: 5px 7px;
+    }
+
+    .clear-reminder {
+      margin-top: 3px;
+    }
+
+    /* 右側資訊密度：縮短空白，不縮小主要觸控目標 */
+    .side-stack {
+      gap: 7px;
+    }
+
+    .panel {
+      padding: 10px;
+    }
+
+    .panel-heading {
+      min-height: 22px;
+    }
+
+    .reminder-group {
+      margin-top: 4px;
+    }
+
+    .reminder-group-title {
+      margin-bottom: 3px;
+    }
+
+    .reminder-grid {
+      gap: 3px;
+    }
+
+    .reminder-button {
+      min-height: 30px;
+      padding: 4px 5px;
+      font-size: 11px;
+    }
+
+    .current-reminder {
+      min-height: 28px;
+      margin-top: 5px;
+      padding: 5px 7px;
+      font-size: 11px;
+    }
+
+    #customReminder {
+      min-height: 42px;
+      padding: 6px 8px;
+    }
+    /* 投影上線修正：退出按鈕固定高對比，避免與任何背景融合 */
+    .projection-exit {
+      position: relative;
+      z-index: 20;
+      border: 2px solid #172033 !important;
+      background: #ffffff !important;
+      color: #172033 !important;
+      box-shadow: 0 4px 14px #00000035, 0 0 0 2px #ffffffaa;
+      text-shadow: none;
+    }
+
+    .projection-exit:hover,
+    .projection-exit:focus-visible {
+      background: #edf3ff !important;
+      border-color: #356ae6 !important;
+      color: #172033 !important;
+      outline: 3px solid #ffffff;
+      outline-offset: 2px;
+    }
+
+    /* 明亮投影主題固定使用淺色基底，不受教師介面深色設定影響 */
+    .projection.theme-classic,
+    .projection.theme-soft,
+    .projection.theme-flip,
+    .projection.theme-mint,
+    .projection.theme-mono,
+    body[data-ui-theme="dark"] .projection.theme-classic,
+    body[data-ui-theme="dark"] .projection.theme-soft,
+    body[data-ui-theme="dark"] .projection.theme-flip,
+    body[data-ui-theme="dark"] .projection.theme-mint,
+    body[data-ui-theme="dark"] .projection.theme-mono {
+      color: #172033 !important;
+    }
+
+    .projection.theme-classic,
+    body[data-ui-theme="dark"] .projection.theme-classic {
+      background: #f7faff !important;
+    }
+
+    .projection.theme-soft,
+    body[data-ui-theme="dark"] .projection.theme-soft {
+      background: #f4f7fb !important;
+    }
+
+    .projection.theme-flip,
+    body[data-ui-theme="dark"] .projection.theme-flip {
+      background: #e9e4d8 !important;
+      color: #27231e !important;
+    }
+
+    .projection.theme-flip .projection-count {
+      background: #fffaf0 !important;
+      color: #27231e !important;
+      border: 2px solid #746b5e;
+      box-shadow: 0 6px 0 #b9ae9d;
+    }
+
+    .projection.theme-mint,
+    body[data-ui-theme="dark"] .projection.theme-mint {
+      background: #eaf7f3 !important;
+      color: #173b35 !important;
+    }
+
+    .projection.theme-mono,
+    body[data-ui-theme="dark"] .projection.theme-mono {
+      background: #ffffff !important;
+      color: #111111 !important;
+    }
+
+    .projection.theme-classic .projection-status,
+    .projection.theme-classic .projection-note,
+    .projection.theme-soft .projection-status,
+    .projection.theme-soft .projection-note,
+    .projection.theme-flip .projection-status,
+    .projection.theme-flip .projection-note,
+    .projection.theme-mint .projection-status,
+    .projection.theme-mint .projection-note,
+    .projection.theme-mono .projection-status,
+    .projection.theme-mono .projection-note,
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-classic .projection-note,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-soft .projection-note,
+    body[data-ui-theme="dark"] .projection.theme-flip .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-flip .projection-note,
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-mint .projection-note,
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-status,
+    body[data-ui-theme="dark"] .projection.theme-mono .projection-note {
+      background: #ffffff !important;
+      color: #172033 !important;
+      box-shadow: 0 8px 26px #26365018;
+    }
+
+    .projection.multi .projection-body {
+      justify-content: center;
+      gap: 18px;
+      padding: 18px 28px 30px;
+    }
+
+    .projection-multi-grid {
+      display: grid;
+      width: min(1320px, 94vw);
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(12px, 2vw, 26px);
+      align-items: stretch;
+    }
+
+    .projection-card {
+      min-width: 0;
+      padding: clamp(16px, 2vw, 28px);
+      border: 1px solid #ffffff2b;
+      border-radius: 22px;
+      background: #ffffff0f;
+      box-shadow: 0 10px 28px #0000001c;
+      text-align: center;
+    }
+
+    .projection-card-title {
+      margin: 14px 0 5px;
+      color: var(--exam-color, #8db1ff);
+      font-size: clamp(24px, 3vw, 48px);
+    }
+
+    .projection-card .projection-label {
+      margin-top: 22px;
+      font-size: clamp(13px, 1.3vw, 18px);
+    }
+
+    .projection-card-count {
+      margin: 10px 0 4px;
+      font-size: clamp(54px, 8vw, 120px);
+    }
+
+    .projection-multi-note {
+      margin-top: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #ffffff12;
+      color: inherit;
+      font-size: clamp(13px, 1.2vw, 17px);
+    }
+
+    .projection.theme-soft .projection-card,
+    .projection.theme-classic .projection-card,
+    .projection.theme-flip .projection-card,
+    .projection.theme-mint .projection-card,
+    .projection.theme-mono .projection-card {
+      border-color: #17203320;
+      background: #ffffffcc;
+      box-shadow: 0 8px 24px #26365018;
+    }
+
+    .projection.theme-soft .projection-multi-note,
+    .projection.theme-classic .projection-multi-note,
+    .projection.theme-flip .projection-multi-note,
+    .projection.theme-mint .projection-multi-note,
+    .projection.theme-mono .projection-multi-note {
+      background: #1720330b;
+    }
+
+    @media (max-width: 700px) {
+      .projection-multi-grid {
+        grid-template-columns: 1fr;
+        max-height: 72vh;
+        overflow: auto;
+      }
+    }
+
+    /* 暗色投影主題維持深色基底，並保留白底退出按鈕的可見性 */
+    .projection.theme-digital,
+    .projection.theme-led,
+    .projection.theme-night,
+    .projection.theme-warm,
+    .projection.theme-contrast {
+      color: #f8fafc;
+    }
   </style>
 </head>
 <body>
@@ -1467,6 +1875,15 @@
           <button class="projection-button" type="button" onclick="startProjection()">
             ⛶ 全螢幕投影
           </button>
+          <label class="theme-switch" title="切換教師控制頁明暗介面">
+            <span class="theme-icon theme-icon-light" id="uiThemeIcon" aria-hidden="true">☀</span>
+            <span class="theme-switch-copy">
+              <span class="theme-switch-label" id="uiThemeLabel">明亮</span>
+              <span class="theme-switch-hint">介面</span>
+            </span>
+            <input id="uiThemeSwitch" type="checkbox" onchange="updateUITheme()" aria-label="切換明亮或暗色介面" />
+            <span class="theme-switch-track" aria-hidden="true"><span class="theme-switch-thumb"></span></span>
+          </label>
           <div class="clock-card" id="clockCard">
             <small id="clockDate">正在讀取日期</small>
             <strong id="clockTime">--:--:--</strong>
@@ -1524,20 +1941,6 @@
           </details>
 
           <details class="panel setting-panel">
-            <summary>介面主題設定</summary>
-            <div class="setting-content">
-              <div class="setting-row">
-                <span>教師控制頁</span>
-                <select id="uiTheme" onchange="updateUITheme()">
-                  <option value="light">明亮介面</option>
-                  <option value="dark">暗色介面</option>
-                </select>
-              </div>
-              <div class="panel-hint">只會改變教師控制頁與編輯視窗，不會改變投影主題。</div>
-            </div>
-          </details>
-
-          <details class="panel setting-panel">
             <summary>聲音提示設定</summary>
             <div class="setting-content">
               <div class="check-row">
@@ -1560,14 +1963,14 @@
               </div>
               <input id="soundVolume" class="range-input" type="range" min="0.2" max="1" step="0.05" value="0.7" oninput="updateSoundVolume()" />
               <button class="secondary-button" type="button" onclick="testSound()">測試提示音</button>
-              <div class="panel-hint">倒數結束、考試開始／結束與套用提醒時播放。</div>
+              <div class="panel-hint">開始、結束或套用提醒時播放。</div>
             </div>
           </details>
 
           <section class="panel">
             <div class="panel-heading">
               <h3>課堂人數</h3>
-              <span class="panel-hint">可課前設定</span>
+              <span class="panel-hint">課前設定</span>
             </div>
             <div class="attendance-grid">
               <div>
@@ -1586,7 +1989,7 @@
           <section class="panel reminder-panel">
             <div class="panel-heading">
               <h3>課堂提醒</h3>
-              <span class="panel-hint">點一下立即套用</span>
+              <span class="panel-hint">點擊套用</span>
             </div>
 
             <div class="reminder-group">
@@ -1619,8 +2022,8 @@
               </div>
             </div>
 
-            <div class="current-reminder" id="currentReminder">尚未選擇提醒</div>
-            <textarea id="customReminder" placeholder="需要自訂時再輸入提醒文字" onchange="saveExamNote()"></textarea>
+            <div class="current-reminder" id="currentReminder">尚無提醒</div>
+            <textarea id="customReminder" placeholder="自訂提醒（可留白）" onchange="saveExamNote()"></textarea>
             <button class="clear-reminder" type="button" onclick="clearReminder()">清除目前提醒</button>
           </section>
 
@@ -1717,9 +2120,14 @@
     let toastTimer = null;
     let soundContext = null;
     let previousExamState = { id: null, status: null, second: null };
+    let projectionAutoExamId = null;
     let timeOffset = 0;
     let timeSource = "device";
+    let clockAnchorMs = Date.now();
+    let clockAnchorMono = typeof performance !== "undefined" ? performance.now() : 0;
     const STANDARD_TIME_URL = "https://www.stdtime.gov.tw/Home/GetServerTime";
+    const TAIPEI_TIME_FALLBACK_URL = "https://timeapi.io/api/time/current/zone?timeZone=Asia%2FTaipei";
+    const TAIPEI_TIME_ZONE = "Asia/Taipei";
 
     let clockSettings = {
       format: "24",
@@ -1739,52 +2147,149 @@
 
     let uiTheme = "light";
 
+    function currentClockMs() {
+      const monoNow = typeof performance !== "undefined" ? performance.now() : 0;
+      if (clockAnchorMono && monoNow) {
+        return clockAnchorMs + (monoNow - clockAnchorMono);
+      }
+      return Date.now() + timeOffset;
+    }
+
     function nowDate() {
-      return new Date(Date.now() + timeOffset);
+      return new Date(currentClockMs());
     }
 
     function updateTimeSource() {
       const source = $("clockSource");
       if (!source) return;
-      source.textContent = timeSource === "standard" ? "國家標準時間" : "裝置時間（離線備援）";
+      source.textContent = timeSource === "standard" ? "國家標準時間" : timeSource === "network" ? "臺北網路時間" : "裝置時間（離線備援）";
       source.title = timeSource === "standard"
         ? "已與臺灣國家標準時間同步"
-        : "目前無法連線，使用本機裝置時間";
+        : timeSource === "network"
+          ? "官方端點無法讀取，已使用臺北網路時間校正"
+          : "目前無法連線，使用本機裝置時間";
+    }
+
+    async function fetchTimeSample(url, parser) {
+      const requestStart = Date.now();
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error("時間服務無法連線");
+      const responseText = await response.text();
+      const requestEnd = Date.now();
+      const serverMs = parser(response, responseText);
+      if (!Number.isFinite(serverMs)) throw new Error("時間服務格式無效");
+      const midpointMs = (requestStart + requestEnd) / 2;
+      return {
+        serverMs,
+        offset: serverMs - midpointMs,
+        roundTripMs: requestEnd - requestStart,
+      };
+    }
+
+    function parseStandardTimeResponse(response, responseText) {
+      const text = responseText.trim();
+      let value = text;
+      if (text) {
+        try {
+          value = JSON.parse(text);
+        } catch {
+          value = text;
+        }
+      } else {
+        value = response.headers.get("date") || "";
+      }
+      const serverValue = typeof value === "string"
+        ? value
+        : value?.serverTime || value?.datetime || value?.time || value?.data || value;
+      return Date.parse(String(serverValue));
+    }
+
+    function parseTaipeiTimeResponse(response, responseText) {
+      const data = JSON.parse(responseText);
+      const raw = String(data.dateTime || data.datetime || data.time || "")
+        .replace(/(\.\d{3})\d+$/, "$1");
+      const value = /(?:Z|[+-]\d{2}:?\d{2})$/.test(raw) ? raw : `${raw}+08:00`;
+      return Date.parse(value);
     }
 
     async function syncStandardTime(showMessage = false) {
-      const requestStart = Date.now();
       try {
-        const response = await fetch(STANDARD_TIME_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error("標準時間服務無法連線");
-        const value = await response.json();
-        const serverMs = Date.parse(value);
-        if (!Number.isFinite(serverMs)) throw new Error("標準時間格式無效");
-        const requestEnd = Date.now();
-        timeOffset = serverMs - Math.round((requestStart + requestEnd) / 2);
+        const results = await Promise.allSettled(
+          Array.from({ length: 3 }, () => fetchTimeSample(STANDARD_TIME_URL, parseStandardTimeResponse)),
+        );
+        const samples = results
+          .filter((result) => result.status === "fulfilled")
+          .map((result) => result.value)
+          .sort((a, b) => a.roundTripMs - b.roundTripMs);
+        if (!samples.length) throw new Error("官方時間無法取得");
+
+        const best = samples[0];
+        timeOffset = best.offset;
+        clockAnchorMs = Date.now() + best.offset;
+        clockAnchorMono = typeof performance !== "undefined" ? performance.now() : 0;
         timeSource = "standard";
         updateTimeSource();
         renderAll();
-        if (showMessage) showToast("已與國家標準時間同步");
+        if (showMessage) showToast(`已同步國家標準時間（延遲 ${best.roundTripMs} ms）`);
       } catch {
-        timeSource = "device";
-        updateTimeSource();
-        if (showMessage) showToast("標準時間暫時無法連線，使用裝置時間");
+        try {
+          const results = await Promise.allSettled(
+            Array.from({ length: 3 }, () => fetchTimeSample(TAIPEI_TIME_FALLBACK_URL, parseTaipeiTimeResponse)),
+          );
+          const samples = results
+            .filter((result) => result.status === "fulfilled")
+            .map((result) => result.value)
+            .sort((a, b) => a.roundTripMs - b.roundTripMs);
+          if (!samples.length) throw new Error("臺北網路時間無法取得");
+
+          const best = samples[0];
+          timeOffset = best.offset;
+          clockAnchorMs = Date.now() + best.offset;
+          clockAnchorMono = typeof performance !== "undefined" ? performance.now() : 0;
+          timeSource = "network";
+          updateTimeSource();
+          renderAll();
+          if (showMessage) showToast(`已使用臺北網路時間校正（延遲 ${best.roundTripMs} ms）`);
+        } catch {
+          timeOffset = 0;
+          clockAnchorMs = Date.now();
+          clockAnchorMono = typeof performance !== "undefined" ? performance.now() : 0;
+          timeSource = "device";
+          updateTimeSource();
+          if (showMessage) showToast("網路時間暫時無法連線，使用裝置時間");
+        }
       }
     }
 
+    function taipeiParts(date = nowDate()) {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: TAIPEI_TIME_ZONE,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        weekday: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23",
+      }).formatToParts(date);
+      return Object.fromEntries(parts.filter((part) => part.type !== "literal").map((part) => [part.type, part.value]));
+    }
+
     function localDate(date = nowDate()) {
-      return [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate())].join("-");
+      const parts = taipeiParts(date);
+      return `${parts.year}-${parts.month}-${parts.day}`;
     }
 
     function dateTime(exam, time) {
-      return new Date(`${exam.date}T${time}:00`);
+      return new Date(`${exam.date}T${time}:00+08:00`);
     }
 
     function formatDate(dateString) {
-      const date = new Date(`${dateString}T00:00:00`);
-      const weekday = ["日", "一", "二", "三", "四", "五", "六"][date.getDay()];
-      return `${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日（${weekday}）`;
+      const date = new Date(`${dateString}T00:00:00+08:00`);
+      const parts = taipeiParts(date);
+      const weekday = { Sun: "日", Mon: "一", Tue: "二", Wed: "三", Thu: "四", Fri: "五", Sat: "六" }[parts.weekday];
+      return `${parts.year} 年 ${Number(parts.month)} 月 ${Number(parts.day)} 日（${weekday}）`;
     }
 
     function formatTime(time) {
@@ -1794,16 +2299,17 @@
       return `${period} ${pad(displayHour)}:${pad(minute)}`;
     }
 
-    function formatClock(date = new Date()) {
-      let hour = date.getHours();
+    function formatClock(date = nowDate()) {
+      const parts = taipeiParts(date);
+      let hour = Number(parts.hour);
       const period = hour < 12 ? "上午" : "下午";
 
       if (clockSettings.format === "12") {
         hour = hour % 12 || 12;
       }
 
-      let result = `${pad(hour)}:${pad(date.getMinutes())}`;
-      if (clockSettings.showSeconds) result += `:${pad(date.getSeconds())}`;
+      let result = `${pad(hour)}:${parts.minute}`;
+      if (clockSettings.showSeconds) result += `:${parts.second}`;
       return clockSettings.format === "12" ? `${result} ${period}` : result;
     }
 
@@ -1856,6 +2362,25 @@
         || list.find((exam) => getExamStatus(exam) === "upcoming")
         || list.find((exam) => getExamStatus(exam) === "done")
         || null;
+    }
+
+    function advanceProjectionExam(now = nowDate()) {
+      if (!$("projection")?.classList.contains("open")) return false;
+
+      const current = currentExam();
+      const currentStatus = current ? getExamStatus(current, now) : "done";
+      if (currentStatus !== "done") return false;
+
+      const next = sortedExams().find((exam) => {
+        const status = getExamStatus(exam, now);
+        return status === "running" || status === "upcoming";
+      });
+
+      if (!next || next.id === selectedExamId) return false;
+      selectedExamId = next.id;
+      projectionAutoExamId = next.id;
+      previousExamState = { id: next.id, status: getExamStatus(next, now), second: null };
+      return true;
     }
 
     function subjectIcon(name) {
@@ -1973,15 +2498,30 @@
       localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(soundSettings));
     }
 
+    function renderThemeControl() {
+      const isDark = uiTheme === "dark";
+      const themeSwitch = $("uiThemeSwitch");
+      const themeLabel = $("uiThemeLabel");
+      const themeIcon = $("uiThemeIcon");
+      if (themeSwitch) themeSwitch.checked = isDark;
+      if (themeLabel) themeLabel.textContent = isDark ? "暗色" : "明亮";
+      if (themeIcon) {
+        themeIcon.textContent = isDark ? "☾" : "☀";
+        themeIcon.className = `theme-icon ${isDark ? "theme-icon-dark" : "theme-icon-light"}`;
+        themeIcon.title = isDark ? "暗色介面" : "明亮介面";
+      }
+    }
+
     function loadUITheme() {
       uiTheme = localStorage.getItem(UI_THEME_STORAGE_KEY) === "dark" ? "dark" : "light";
       document.body.dataset.uiTheme = uiTheme;
-      $("uiTheme").value = uiTheme;
+      renderThemeControl();
     }
 
     function updateUITheme() {
-      uiTheme = $("uiTheme").value === "dark" ? "dark" : "light";
+      uiTheme = $("uiThemeSwitch")?.checked ? "dark" : "light";
       document.body.dataset.uiTheme = uiTheme;
+      renderThemeControl();
       localStorage.setItem(UI_THEME_STORAGE_KEY, uiTheme);
       showToast(uiTheme === "dark" ? "已切換為暗色介面" : "已切換為明亮介面");
     }
@@ -2133,13 +2673,13 @@
 
       $("attendanceBar").style.width = `${ratio}%`;
       $("attendanceText").textContent = `目前 ${present} / ${total} 人到場`;
-      $("currentReminder").textContent = exam?.note || "尚未選擇提醒";
+      $("currentReminder").textContent = exam?.note || "尚無提醒";
       $("customReminder").value = exam?.note || "";
 
       const next = sortedExams().find((item) => getExamStatus(item) === "upcoming");
       $("examCount").textContent = `${exams.length} 場`;
       $("nextExam").textContent = next ? `${subjectIcon(next.name)} ${next.name}` : "沒有尚未開始的考試";
-      $("nextTime").textContent = next ? `${formatDate(next.date)} · ${formatTime(next.start)}` : "可按「新增考試」安排下一場";
+      $("nextTime").textContent = next ? `${formatDate(next.date)} · ${formatTime(next.start)}` : "尚無下一場";
     }
 
     function renderCurrentClock() {
@@ -2147,6 +2687,11 @@
       $("clockDate").textContent = clockSettings.showDate ? formatDate(localDate(now)) : "";
       $("clockDate").style.display = clockSettings.showDate ? "block" : "none";
       $("clockTime").textContent = formatClock(now);
+
+      if (advanceProjectionExam(now)) {
+        renderAll();
+        return;
+      }
 
       const exam = currentExam();
       const countdown = $("heroCountdown");
@@ -2186,6 +2731,56 @@
 
       const now = nowDate();
       const status = getExamStatus(exam, now);
+      const runningExams = sortedExams().filter((item) => getExamStatus(item, now) === "running");
+      projection.classList.toggle("multi", runningExams.length > 1);
+      if (status === "done") {
+        const next = sortedExams().find((item) => {
+          const nextStatus = getExamStatus(item, now);
+          return nextStatus === "running" || nextStatus === "upcoming";
+        });
+        if (!next) {
+          $("projectionBody").innerHTML = `
+            <div class="projection-status done">✓ 今日考試已全部完成</div>
+            <h2 class="projection-title">今天的考試都完成了</h2>
+            <div class="projection-label">目前沒有下一場考試</div>
+            <div class="projection-clock">${clockSettings.showDate ? `${formatDate(localDate(now))} · ` : ""}目前時間 ${formatClock(now)}</div>
+          `;
+          return;
+        }
+      }
+
+      if (runningExams.length > 1) {
+        const cards = runningExams.map((item) => {
+          const itemRemaining = Math.max(0, (dateTime(item, item.end) - now) / 1000);
+          const itemTone = getCountdownLevel(itemRemaining, "running");
+          const itemNote = clockSettings.showNote && item.note
+            ? `<div class="projection-multi-note">${escapeHtml(item.note)}</div>`
+            : "";
+          return `
+            <article class="projection-card" data-exam-id="${item.id}" style="--exam-color: ${item.color || "#8db1ff"}">
+              <div class="projection-status running">● 進行中</div>
+              <h2 class="projection-card-title">${subjectIcon(item.name)} ${escapeHtml(item.name)}</h2>
+              ${clockSettings.showSchedule ? `<div class="projection-date">${formatTime(item.start)} – ${formatTime(item.end)}</div>` : ""}
+              <div class="projection-label">剩餘時間</div>
+              <div class="projection-count projection-card-count ${itemTone}">${secondsToClock(itemRemaining)}</div>
+              ${itemNote}
+            </article>
+          `;
+        }).join("");
+        const today = clockSettings.showDate ? `${formatDate(localDate(now))} · ` : "";
+        $("projectionBody").innerHTML = `
+          <div class="projection-status running">● ${runningExams.length} 場同時進行</div>
+          <div class="projection-multi-grid">${cards}</div>
+          <div class="projection-clock">${today}目前時間 ${formatClock(now)}</div>
+        `;
+        runningExams.forEach((item) => {
+          const count = $("projectionBody").querySelector(`[data-exam-id="${item.id}"] .projection-card-count`);
+          const remaining = Math.max(0, (dateTime(item, item.end) - now) / 1000);
+          applyExamCountdownColor(count, item, remaining);
+        });
+        return;
+      }
+
       const start = dateTime(exam, exam.start);
       const end = dateTime(exam, exam.end);
       const remaining = status === "upcoming" ? (start - now) / 1000 : status === "running" ? (end - now) / 1000 : 0;
@@ -2193,7 +2788,7 @@
       const statusText = status === "running" ? "● 考試進行中" : status === "done" ? "✓ 本場已結束" : "○ 尚未開始";
       const label = status === "upcoming" ? "距離開始還有" : status === "running" ? "剩餘時間" : "考試已結束";
       const schedule = clockSettings.showSchedule ? `<div class="projection-date">${formatDate(exam.date)} · ${formatTime(exam.start)} – ${formatTime(exam.end)}</div>` : "";
-      const note = clockSettings.showNote ? `<div class="projection-note">${escapeHtml(exam.note || "請依照老師指示進行。")}</div>` : "";
+      const note = clockSettings.showNote && status !== "done" && exam.note ? `<div class="projection-note">${escapeHtml(exam.note)}</div>` : "";
       const today = clockSettings.showDate ? `${formatDate(localDate(now))} · ` : "";
 
       $("projectionBody").innerHTML = `
@@ -2222,7 +2817,8 @@
     }
 
     function toTimeInput(date) {
-      return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      const parts = taipeiParts(date);
+      return `${parts.hour}:${parts.minute}`;
     }
 
     function openExamModal(id = null) {
@@ -2344,10 +2940,30 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `考試倒數看板設定_${localDate()}.json`;
+      const exportStamp = taipeiParts(nowDate());
+      const exportDate = `${exportStamp.year}-${exportStamp.month}-${exportStamp.day}`;
+      const exportTime = `${exportStamp.hour}-${exportStamp.minute}-${exportStamp.second}`;
+      link.download = `考試倒數看板設定_${exportDate}_${exportTime}.json`;
       link.click();
       URL.revokeObjectURL(url);
       showToast("設定檔已匯出");
+    }
+
+    function isValidExamDateTime(date, time) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) return false;
+      const parsed = new Date(`${date}T${time}:00+08:00`);
+      if (!Number.isFinite(parsed.getTime())) return false;
+      const parts = taipeiParts(parsed);
+      const [year, month, day] = date.split("-");
+      const [hour, minute] = time.split(":");
+      return parts.year === year && parts.month === month && parts.day === day
+        && parts.hour === hour && parts.minute === minute;
+    }
+
+    function normalizeExamColor(color) {
+      return typeof color === "string" && /^#[0-9a-fA-F]{6}$/.test(color.trim())
+        ? color.trim()
+        : "#356ae6";
     }
 
     function importSettings(event) {
@@ -2373,23 +2989,24 @@
             const date = String(exam.date || "").trim();
             const start = String(exam.start || "").trim();
             const end = String(exam.end || "").trim();
-            if (!name || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(start) || !/^\d{2}:\d{2}$/.test(end)) return null;
+            if (!name || !isValidExamDateTime(date, start) || !isValidExamDateTime(date, end)) return null;
+            if (dateTime({ date }, end) <= dateTime({ date }, start)) return null;
             return {
               ...exam,
-              id: Number.isFinite(Number(exam.id)) ? Number(exam.id) : nowId + index,
-              name,
+              id: Number.isSafeInteger(Number(exam.id)) && Number(exam.id) > 0 ? Number(exam.id) : nowId + index,
+              name: name.slice(0, 80),
               date,
               start,
               end,
-              color: typeof exam.color === "string" && exam.color.trim() ? exam.color : "#356ae6",
-              note: typeof exam.note === "string" ? exam.note : "",
+              color: normalizeExamColor(exam.color),
+              note: typeof exam.note === "string" ? exam.note.slice(0, 300) : "",
             };
           }).filter(Boolean);
 
           if (!normalizedExams.length) throw new Error("沒有可用的考試資料");
 
           exams = normalizedExams;
-          selectedExamId = exams[0].id;
+          selectedExamId = bestExam()?.id || exams[0].id;
 
           if (data.classSettings && typeof data.classSettings === "object") {
             $("totalStudents").value = data.classSettings.total ?? 30;
@@ -2448,8 +3065,9 @@
     }
 
     function startProjection() {
-      renderProjection();
       $("projection").classList.add("open");
+      advanceProjectionExam();
+      renderProjection();
       document.body.style.overflow = "hidden";
       document.documentElement.requestFullscreen?.().catch(() => {});
     }
@@ -2481,7 +3099,7 @@
     updateTimeSource();
     renderAll();
     syncStandardTime();
-    setInterval(renderCurrentClock, 1000);
+    setInterval(renderCurrentClock, 250);
     setInterval(() => syncStandardTime(false), 5 * 60 * 1000);
   </script>
 </body>
